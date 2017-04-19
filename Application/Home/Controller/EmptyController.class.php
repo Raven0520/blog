@@ -8,10 +8,11 @@
 
 namespace Home\Controller;
 
-
 use Common\Controller\CommonController;
 
 class EmptyController extends CommonController
 {
-
+    public function __empty(){
+        $this->display();
+    }
 }
