@@ -240,6 +240,31 @@ abstract class Driver {
     }
 
     /**
+     * 执行数据库事务
+     * @param $callback
+     * @return mixed|null
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function transaction($callback, $model) {
+        $this->startTrans();
+        try {
+            $result = null;
+            if (is_callable($callback)) {
+                $result = call_user_func_array($callback, array($model));
+            }
+            $this->commit();
+            return $result;
+        } catch (\Exception $e) {
+            $this->rollback();
+            throw $e;
+        } catch (\Throwable $e) {
+            $this->rollback();
+            throw $e;
+        }
+    }
+
+    /**
      * 启动事务
      * @access public
      * @return void

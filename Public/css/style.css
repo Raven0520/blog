@@ -8227,3 +8227,13 @@ body.md-skin {
     margin: 0;
   }
 }
+
+
+.add-link i:hover {
+  color: #1ab394;
+}
+
+
+.close-link i:hover {
+  color: #ed5666;
+}

@@ -580,7 +580,7 @@ function vendor($class, $baseUrl = '', $ext='.php') {
 function D($name='',$layer='') {
     if(empty($name)) return new Think\Model;
     static $_model  =   array();
-    $layer          =   $layer? : C('DEFAULT_M_LAYER');
+    $layer          =   $layer? : C('DEFAULT_M_LAYER');  //配置中的模型 名称 model
     if(isset($_model[$name.$layer]))
         return $_model[$name.$layer];
     $class          =   parse_res_name($name,$layer);
@@ -592,6 +592,7 @@ function D($name='',$layer='') {
             import('Common/'.$layer.'/'.$class);
         }else{
             $class      =   '\\Common\\'.$layer.'\\'.$name.$layer;
+            class_exists($class) || $class =   '\\Common\\'.$layer.'\\'.'Common'.$layer;
         }
         $model      =   class_exists($class)? new $class($name) : new Think\Model($name);
     }else {

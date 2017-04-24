@@ -4349,6 +4349,14 @@ body.fullscreen-ibox-mode {
 .ibox.fullscreen .collapse-link {
   display: none;
 }
+
+.ibox.fullscreen .add-link {
+  cursor: pointer;
+}
+.add-link i:hover {
+  color: #1ab394;
+}
+
 .ibox.fullscreen .ibox-content {
   min-height: calc(100% - 48px);
 }
