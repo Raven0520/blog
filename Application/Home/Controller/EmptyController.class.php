@@ -59,4 +59,12 @@ class EmptyController extends CommonController
             $this->display();
         }
     }
+
+    /**
+     * 编辑操作
+     * @param null $id
+     */
+    public function edit($id = 0) {
+        $this->ajaxReturn($this->info($id));
+    }
 }

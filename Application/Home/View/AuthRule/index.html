@@ -13,6 +13,9 @@
                         <a class="add-link" data-toggle="modal" data-target="#add">
                             <i class="fa fa-plus"></i>
                         </a>
+                        <a class="add-link" data-toggle="modal" data-target="#add" onclick="edit()">
+                            <i class="fa fa-edit"></i>
+                        </a>
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
@@ -25,7 +28,7 @@
                     <div id="tree">
                         <ul>
                             <li class="jstree-open">Site
-                                <ul id="site">
+                                <ul id="site" class="rule">
                                 </ul>
                             </li>
                         </ul>
@@ -39,6 +42,9 @@
                 <div class="ibox-title">
                     <h5>Menu Detail</h5>
                     <div class="ibox-tools">
+                        <a class="add-link" data-toggle="modal" data-target="#add">
+                            <i class="fa fa-edit"></i>
+                        </a>
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
@@ -48,10 +54,36 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-
-                    <div id="using_json"></div>
-
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Previous</label>
+                        <span id="Previous"></span>
+                    </div>
                 </div>
+                <div class="ibox-content">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Menu Type</label>
+                        <span id="menu_type"></span>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Title</label>
+                        <span id="title"></span>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">icon</label>
+                        <span id="menu_icon"></span>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Rule</label>
+                        <span id="rule"></span>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -140,11 +172,22 @@
 
     <script>
         $(function () {
+            $('#site li').each(function (i) {
+                $(this).click(function () {
+                    console.log($(this).text());
+                })
+            });
+
             var icon = '{$icon}';
             var menu = '{$menu}';
             menu = JSON.parse(menu);
             icon = JSON.parse(icon);
-            var types = {'default':{'icon':'fa fa-list'}};
+            var types = {
+                'default':{'icon':'fa fa-list'},
+                'Add':{'icon':'fa fa-plus'},
+                'Edit':{'icon':'fa fa-pencil'},
+                'Del':{'icon':'fa fa-close'}
+            };
             $.each(icon,function (i,v) {
                 types[v.title] = {'icon':v.icon};
             });
@@ -154,11 +197,11 @@
             $.each(menu,function (k,v) {
                 if (v.sort_id == 0){
                     type = '{"type":"'+ v.title +'"}';
-                    html = "<li data-jstree='"+ type +"'>"+ v.title +"<ul id='sort_"+ v.id +"'></ul></li>";
+                    html = "<li data-jstree='"+ type +"')'><a href='#' onclick='info("+ v.id +")'>"+ v.title +"</a><ul id='sort_"+ v.id +"'></ul></li>";
                     $("#site").append(html);
                 }else {
                     type = '{"type":"'+ v.title +'"}';
-                    html = "<li data-jstree='"+ type +"'>"+ v.title +"</li>";
+                    html = "<li id='second"+ v.id +"' data-jstree='"+ type +"'><button style='border: none;padding: 0' class='btn-link' onclick='info("+ v.id +")'>"+ v.title +"</button></li>";
                     $('#sort_' + v.sort_id).append(html);
                 }
             });
@@ -173,6 +216,21 @@
             
 
         });
+        
+        //获取菜单信息
+        function info(id) {
+            $.post("{:U('edit')}",{id:id},function (info) {
+                $('#title').html(info.title);
+                console.log(info);
+                return;
+            },"JSON");
+        }
+
+        function edit() {
+            $('#jstree').on('change.jstree',function (e,data) {
+                console.log(data.instance.get_node(data.selected[0]).id);
+            })
+        }
 
         //预览图标
         function getIcon(icon) {
