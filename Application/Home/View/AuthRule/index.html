@@ -13,9 +13,6 @@
                         <a class="add-link" data-toggle="modal" data-target="#add">
                             <i class="fa fa-plus"></i>
                         </a>
-                        <a class="add-link" data-toggle="modal" data-target="#add" onclick="edit()">
-                            <i class="fa fa-edit"></i>
-                        </a>
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
@@ -42,7 +39,7 @@
                 <div class="ibox-title">
                     <h5>Menu Detail</h5>
                     <div class="ibox-tools">
-                        <a class="add-link" data-toggle="modal" data-target="#add">
+                        <a class="add-link" onclick="edit()">
                             <i class="fa fa-edit"></i>
                         </a>
                         <a class="collapse-link">
@@ -54,36 +51,36 @@
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <div class="form-group">
+                    <div class="form-group rule-box">
                         <label class="col-sm-3 control-label">Previous</label>
-                        <span id="Previous"></span>
+                        <span id="previous"></span>
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <div class="form-group">
+                    <div class="form-group rule-box">
                         <label class="col-sm-3 control-label">Menu Type</label>
-                        <span id="menu_type"></span>
+                        <span id="menu_type_name"></span>
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <div class="form-group">
+                    <div class="form-group rule-box">
                         <label class="col-sm-3 control-label">Title</label>
                         <span id="title"></span>
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <div class="form-group">
+                    <div class="form-group rule-box">
                         <label class="col-sm-3 control-label">icon</label>
                         <span id="menu_icon"></span>
                     </div>
                 </div>
                 <div class="ibox-content">
-                    <div class="form-group">
+                    <div class="form-group rule-box">
                         <label class="col-sm-3 control-label">Rule</label>
                         <span id="rule"></span>
                     </div>
                 </div>
-
+                <!--菜单id-->
             </div>
         </div>
     </div>
@@ -97,10 +94,11 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
+                        <input type="hidden" id="id" name="id">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Previous</label>
                             <div class="col-sm-9">
-                                <select class="form-control m-b" name="sort_id">
+                                <select class="form-control m-b" name="sort_id" id="sort_id">
                                     <option value="0">Top Menu</option>
                                     <foreach name="sort" item="vo">
                                         <option value="{$vo.id}">{$vo.title}</option>
@@ -112,7 +110,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Menu Type</label>
                             <div class="col-sm-9">
-                                <select class="form-control m-b" name="menu_type">
+                                <select class="form-control m-b" name="menu_type" id="menu_type">
                                     <option value="0">Menu</option>
                                     <option value="1">Second Menu</option>
                                     <option value="2">Window</option>
@@ -124,14 +122,14 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Title</label>
                             <div class="col-sm-9">
-                                <input class="form-control m-b" name="title" />
+                                <input class="form-control m-b" name="title" id="title_"/>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Icon</label>
                             <div class="col-sm-9">
-                                <input class="form-control m-b" name="icon" onblur="getIcon(this.value)"/>
+                                <input class="form-control m-b" name="icon" id="icon_" onblur="getIcon(this.value)"/>
                                 <span class="" id="icon" style="position: absolute; top: 5px; right: 24px; font-size: 24px;"></span>
                             </div>
                         </div>
@@ -139,7 +137,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Rule</label>
                             <div class="col-sm-9">
-                                <input class="form-control m-b" name="name" />
+                                <input class="form-control m-b" name="name" id="name"/>
                             </div>
                         </div>
                     </form>
@@ -219,22 +217,33 @@
         
         //获取菜单信息
         function info(id) {
+            var param = {};
             $.post("{:U('edit')}",{id:id},function (info) {
-                $('#title').html(info.title);
-                console.log(info);
-                return;
+                $(".rule-box").removeClass('form-group');
+                param = {title:'',menu_type_name:'',previous:'',rule:'name'};
+                set.set_by_id(param,info,2);
+
+                //对模态框写入数据
+                console.log(info.menu_type);
+                param = {id:'',sort_id:'',menu_type:'menu_type',title_:'title',icon_:'icon',name:''};
+                set.set_by_id(param,info,1);
+                $("#menu_icon").removeClass().addClass(info.icon);
+                $("#icon").removeClass().addClass(info.icon);
+
             },"JSON");
         }
 
+        //填充数据
         function edit() {
-            $('#jstree').on('change.jstree',function (e,data) {
-                console.log(data.instance.get_node(data.selected[0]).id);
-            })
+            var id = $("#id").val();
+            if (!id){
+                return message('','Id is missing !');
+            }
+            $('#add').modal('show');
         }
 
         //预览图标
         function getIcon(icon) {
-
             $('#icon').removeClass().addClass(icon);
             if (icon == '') {
                 $('#icon').removeClass();
@@ -245,9 +254,7 @@
             var data = $("form").serialize();
 
             $.post("{:U('add')}",data,function (res) {
-                if (res.status == 1){
-
-                }
+                return message('',res.info,res.status);
             },"JSON");
         }
     </script>

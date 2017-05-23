@@ -23,15 +23,13 @@ class CommonModel extends RelationModel
 
         //transaction 在model.class.php 与 Drive.class.php 中添加了 transaction方法
 
-        return Db::transaction(function($model) {
-            $data = empty($model->_data) ? $_POST : $model->_data;
-            '自动编号' == $data['id'] && $data['id'] = '';
-            $data = $model->create($data);
-            if (!$data) {
-                return false;
-            }
-            return empty ($data [$model->getPk()]) ? $model->add() : $model->save();
-        }, $this);
+        $data = empty($this->_data) ? $_POST : $this->_data;
+        '自动编号' == $data['id'] && $data['id'] = '';
+        $data = $this->create($data);
+        if (!$data) {
+            return false;
+        }
+        return empty ($data [$this->getPk()]) ? $this->add() : $this->save();
 
 //        $it = &$this;
 //        $fun = function ()use($it){
