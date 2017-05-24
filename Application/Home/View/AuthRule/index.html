@@ -10,7 +10,7 @@
                 <div class="ibox-title">
                     <h5>Menu List</h5>
                     <div class="ibox-tools">
-                        <a class="add-link" data-toggle="modal" data-target="#add">
+                        <a class="add-link" data-toggle="modal" data-target="#add" onclick="add()">
                             <i class="fa fa-plus"></i>
                         </a>
                         <a class="collapse-link">
@@ -170,11 +170,6 @@
 
     <script>
         $(function () {
-            $('#site li').each(function (i) {
-                $(this).click(function () {
-                    console.log($(this).text());
-                })
-            });
 
             var icon = '{$icon}';
             var menu = '{$menu}';
@@ -197,6 +192,10 @@
                     type = '{"type":"'+ v.title +'"}';
                     html = "<li data-jstree='"+ type +"')'><a href='#' onclick='info("+ v.id +")'>"+ v.title +"</a><ul id='sort_"+ v.id +"'></ul></li>";
                     $("#site").append(html);
+                }else if (v.sort_id == 1){
+                    type = '{"type":"'+ v.title +'"}';
+                    html = "<li id='second"+ v.id +"' data-jstree='"+ type +"'><button style='border: none;padding: 0' class='btn-link' onclick='info("+ v.id +")'>"+ v.title +"</button><ul id='sort_"+ v.id +"'></ul></li>";
+                    $('#sort_' + v.sort_id).append(html);
                 }else {
                     type = '{"type":"'+ v.title +'"}';
                     html = "<li id='second"+ v.id +"' data-jstree='"+ type +"'><button style='border: none;padding: 0' class='btn-link' onclick='info("+ v.id +")'>"+ v.title +"</button></li>";
@@ -224,13 +223,19 @@
                 set.set_by_id(param,info,2);
 
                 //对模态框写入数据
-                console.log(info.menu_type);
                 param = {id:'',sort_id:'',menu_type:'menu_type',title_:'title',icon_:'icon',name:''};
                 set.set_by_id(param,info,1);
                 $("#menu_icon").removeClass().addClass(info.icon);
                 $("#icon").removeClass().addClass(info.icon);
 
             },"JSON");
+        }
+        
+        function add() {
+            //清除模态框中的数据
+            var param = ['id','sort_id','menu_type','title_','icon_','name'];
+            $('#icon').removeClass();
+            clean.clean_by_id(param,1);
         }
 
         //填充数据
@@ -251,9 +256,26 @@
         }
         
         function Save() {
+            var sort_id = $('#sort_id').val();
+            if (!sort_id){
+                return message('','Previous Can not be none !');
+            }
+            var menu_type = $('#menu_type').val();
+            if (!menu_type){
+                return message('','Menu_type Can not be none !');
+            }
+            var title_ = $('#title_').val();
+            if (!title_){
+                return message('','Title Can not be none !');
+            }
+            var name = $('#name').val();
+            if (!name){
+                return message('','Name Can not be none !');
+            }
             var data = $("form").serialize();
 
             $.post("{:U('add')}",data,function (res) {
+                $('#add').modal('hide');
                 return message('',res.info,res.status);
             },"JSON");
         }

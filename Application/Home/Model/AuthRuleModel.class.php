@@ -25,7 +25,5 @@ class AuthRuleModel extends CommonModel
         $this->previous[0] = 'Top';
         $result['menu_type_name'] = $this->menu_type[$result['menu_type']];
         $result['previous']  = $this->previous[$result['sort_id']];
-
-//        '' != $result['previous'] && $result['previous'] = 'Top';
     }
 }

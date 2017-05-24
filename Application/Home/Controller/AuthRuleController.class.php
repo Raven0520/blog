@@ -17,7 +17,7 @@ class AuthRuleController extends EmptyController
         $this->where['status'] = 1;
         $menu = $this->select(CONTROLLER_NAME,$this->where);
         $menu = json_encode($menu);
-        $this->where['sort_id'] = 0;
+        $this->where['sort_id'] = ['in',[0,1]];
         $icon = $this->select(CONTROLLER_NAME,$this->where,'icon,title');
         $icon = json_encode($icon);
         $sort = $this->select(CONTROLLER_NAME,$this->where);
