@@ -86,69 +86,75 @@
     </div>
 
     <div class="modal inmodal" id="add" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content animated bounceInRight">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Add Menu</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form-horizontal">
-                        <input type="hidden" id="id" name="id">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Previous</label>
-                            <div class="col-sm-9">
-                                <select class="form-control m-b" name="sort_id" id="sort_id">
-                                    <option value="0">Top Menu</option>
-                                    <foreach name="sort" item="vo">
-                                        <option value="{$vo.id}">{$vo.title}</option>
-                                    </foreach>
-                                </select>
-                            </div>
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Add Menu</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <input type="hidden" id="id" name="id">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Previous</label>
+                        <div class="col-sm-9">
+                            <select class="form-control m-b" name="sort_id" id="sort_id">
+                                <option value="0">Top Menu</option>
+                                <foreach name="sort" item="vo">
+                                    <option value="{$vo.id}">{$vo.title}</option>
+                                </foreach>
+                            </select>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Menu Type</label>
-                            <div class="col-sm-9">
-                                <select class="form-control m-b" name="menu_type" id="menu_type">
-                                    <option value="0">Menu</option>
-                                    <option value="1">Second Menu</option>
-                                    <option value="2">Window</option>
-                                    <option value="3">Button</option>
-                                </select>
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Menu Type</label>
+                        <div class="col-sm-9">
+                            <select class="form-control m-b" name="menu_type" id="menu_type">
+                                <option value="0">Menu</option>
+                                <option value="1">Second Menu</option>
+                                <option value="2">Window</option>
+                                <option value="3">Button</option>
+                            </select>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Title</label>
-                            <div class="col-sm-9">
-                                <input class="form-control m-b" name="title" id="title_"/>
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Title</label>
+                        <div class="col-sm-9">
+                            <input class="form-control m-b" name="title" id="title_"/>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Icon</label>
-                            <div class="col-sm-9">
-                                <input class="form-control m-b" name="icon" id="icon_" onblur="getIcon(this.value)"/>
-                                <span class="" id="icon" style="position: absolute; top: 5px; right: 24px; font-size: 24px;"></span>
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Icon</label>
+                        <div class="col-sm-9">
+                            <input class="form-control m-b" name="icon" id="icon_" onblur="getIcon(this.value)"/>
+                            <span class="" id="icon" style="position: absolute; top: 5px; right: 24px; font-size: 24px;"></span>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Rule</label>
-                            <div class="col-sm-9">
-                                <input class="form-control m-b" name="name" id="name"/>
-                            </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Rule</label>
+                        <div class="col-sm-9">
+                            <input class="form-control m-b" name="name" id="name"/>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="Save()">Save</button>
-                </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">List_Order</label>
+                        <div class="col-sm-9">
+                            <input class="form-control m-b" name="list_order" id="list_order"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="Save()">Save</button>
             </div>
         </div>
     </div>
+</div>
 </block>
 
 
@@ -223,7 +229,7 @@
                 set.set_by_id(param,info,2);
 
                 //对模态框写入数据
-                param = {id:'',sort_id:'',menu_type:'menu_type',title_:'title',icon_:'icon',name:''};
+                param = {id:'',sort_id:'',menu_type:'menu_type',title_:'title',icon_:'icon',name:'',list_order:''};
                 set.set_by_id(param,info,1);
                 $("#menu_icon").removeClass().addClass(info.icon);
                 $("#icon").removeClass().addClass(info.icon);
@@ -233,7 +239,7 @@
         
         function add() {
             //清除模态框中的数据
-            var param = ['id','sort_id','menu_type','title_','icon_','name'];
+            var param = ['id','sort_id','menu_type','title_','icon_','name','list_order'];
             $('#icon').removeClass();
             clean.clean_by_id(param,1);
         }

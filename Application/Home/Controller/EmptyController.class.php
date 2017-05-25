@@ -24,9 +24,9 @@ class EmptyController extends CommonController
     {
         parent::_initialize();
         //获取菜单
-        $menu = $this->select('AuthRule',['sort_id'=>0,'status'=>1],'id,title,icon,name');
+        $menu = $this->select('AuthRule',['sort_id'=>0,'status'=>1],'id,title,icon,name','list_order');
         foreach ($menu as $k => $v){
-            $second = $this->select('AuthRule',['sort_id'=>$v['id'],'status'=>1],'id,title,icon,name');
+            $second = $this->select('AuthRule',['sort_id'=>$v['id'],'status'=>1],'id,title,icon,name','list_order');
             $second_name = 'sec'.$v['id'];
 
             foreach ($second as $val){
