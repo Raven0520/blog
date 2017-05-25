@@ -18,6 +18,9 @@ class CommonController extends Controller
     // 分页参数
     protected $pages = array();
     protected $model = '';
+    protected $where = array();
+    protected $field = true;
+    protected $order = '';
 
     protected $res = array('status' => 1, 'info' => '操作成功');
 
@@ -125,5 +128,12 @@ class CommonController extends Controller
      */
     protected function select($model = CONTROLLER_NAME, $where = array(), $field = true, $order = '') {
         return $this->lists($model, $where, $field, $order, false);
+    }
+
+    /**
+     * 获取数据
+     */
+    protected function getList($model = CONTROLLER_NAME){
+        return $this->lists($model,$this->where,$this->field,$this->order,false);
     }
 }

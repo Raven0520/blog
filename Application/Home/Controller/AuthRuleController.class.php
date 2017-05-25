@@ -27,4 +27,21 @@ class AuthRuleController extends EmptyController
         $this->assign('sort',$sort);
         $this->display();
     }
+
+    /**
+     * 获取某个menu下的所有rule
+     */
+    public function getRules($id){
+        $this->where['status'] = 1;
+        $rules = $this->getList();
+
+        $info = [];
+        foreach ($rules as $k => $v){
+            $v['sort_id'] == $id && $info['sec'][$k] = $v['id'];
+        }
+        foreach ($rules as $k =>$v){
+            true == in_array($v['sort_id'],$info['sec']) && $info['oth'][$k] = $v['id'];
+        }
+        $this->ajaxReturn($info);
+    }
 }

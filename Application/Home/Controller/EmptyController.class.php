@@ -18,7 +18,6 @@ class EmptyController extends CommonController
     protected $pages = array();
     protected $model = '';
     protected $order = '';
-    protected $where = array();
 
     public function _initialize()
     {
@@ -63,9 +62,12 @@ class EmptyController extends CommonController
     {
         if (IS_POST) {
             $model = D(CONTROLLER_NAME);
+            $model->startTrans();
             if (false !== $model->update()) {
-                $this->success('操作成功', U('index'));
+                $model->commit();
+                $this->success('操作成功', U('/'.CONTROLLER_NAME));
             } else {
+                $model->rollback();
                 $this->error($model->getError());
             }
         } else {

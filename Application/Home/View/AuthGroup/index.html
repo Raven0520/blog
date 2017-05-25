@@ -2,9 +2,8 @@
 
 <block name="action-area">
     <div class="col-sm-8">
-        <div class="title-action">
-
-            <a class="btn btn-primary" style="width: 20%" data-toggle="modal" data-target="#add">Create new group</a>
+        <div class="title-action col-sm-10">
+            <a class="btn btn-primary col-sm-2 col-sm-offset-12">Save</a>
         </div>
     </div>
 </block>
@@ -26,8 +25,13 @@
                     <div class="ibox-tools">
 
                         <a class="add-link" data-toggle="modal" data-target="#add">
+                            <i class="fa fa-plus"></i>
+                        </a>
+
+                        <a class="add-link" data-toggle="modal" data-target="#add" onclick="edit()">
                             <i class="fa fa-edit"></i>
                         </a>
+
                         <a class="collapse-link">
                             <i class="fa fa-chevron-up"></i>
                         </a>
@@ -39,17 +43,17 @@
                 <div class="ibox-content" style="line-height: 3.2">
 
                     <foreach name="menu" item="v">
-                        <button type="button" class="btn btn-default m-r" style="width: 160px"><i class="{$v.icon} m-r-sm"></i>{$v.title}</button>
+                        <button onclick="choose('{$v.id}',1)" id="{$v.id}" type="button" class="btn btn-default m-r" style="width: 160px"><i class="{$v.icon} m-r-sm"></i>{$v.title}</button>
                         <volist name="$v[second]" id="vo">
-                            <button type="button" class="btn btn-default m-r" style="width: 160px"><i class="{$vo.icon} m-r-sm"></i>{$vo.title}</button>
+                            <button onclick="choose('{$vo.id}',2)" type="button" id="{$vo.id}" class="btn btn-default m-r" style="width: 160px"><i class="{$vo.icon} m-r-sm"></i>{$vo.title}</button>
                             <volist name="$vo[other]" id="val">
-                                <button class="btn btn-circle btn-outline btn-info btn-xs m-r-sm" type="button"><i class="{$val.icon}"></i></button>
+                                <button onclick="choose('{$val.id}',3)" id="{$val.id}" class="btn btn-circle btn-outline btn-info btn-xs m-r-sm" type="button"><i class="{$val.icon}"></i></button>
                             </volist>
                         </volist>
                         <br/>
                     </foreach>
 
-                    <input type="text" class="form-control" readonly>
+                    <input type="text" class="form-control" id="rules" readonly>
                 </div>
             </div>
         </div>
@@ -82,4 +86,103 @@
             </div>
         </div>
     </div>
+</block>
+
+<block name="script">
+    <script>
+        var rules = [];
+        var rule_text;
+
+        function choose(id,type) {
+
+            if (type == 1 | type == 2){
+                changeClass(id,'btn-default','btn-info');
+
+                $.ajax({
+                    type : "POST",
+                    data : {id:id},
+                    url  : "/AuthRule/getRules",
+                    success : function (res) {
+                        if (res.sec){
+                            $.each(res.sec,function (i,v) {
+                                1 == type && changeClass(v,'btn-default','btn-info');
+                                2 == type && changeClass(v,'btn-outline btn-info','btn-info');
+                            });
+                        }
+                        if (type == 1){
+                            if (res.oth){
+                                $.each(res.oth,function (i,v) {
+                                    changeClass(v,'btn-outline btn-info','btn-info');
+                                })
+                            }
+                        }
+                        updateRule();
+                    }
+                })
+            }else {
+                changeClass(id,'btn-outline btn-info','btn-info');
+            }
+        }
+
+        /**
+         * 更改样式的方法
+         */
+        function changeClass(id,origin,replace) {
+            var bool;
+            var target = $('#'+id);
+            var cls = target.attr('class');
+            bool = cls.indexOf(origin) + 1;
+
+            0 != bool && target.removeClass(origin).addClass(replace);
+            0 != bool && rules.push(id);
+            0 == bool && target.removeClass(replace).addClass(origin);
+            0 == bool && removeRules(rules,id);
+        }
+
+        /**
+         * 去除元素的方法
+         */
+        function removeRules(arr,val) {
+            for (var i = 0; i < arr.length; i++){
+                arr[i] == val && arr.splice(i,1);
+            }
+        }
+
+        /**
+         * 设置规则字符串
+         */
+        function updateRule() {
+            rule_text = rules.join(',');
+            $('#rules').val(rule_text);
+        }
+
+        /**
+         * 获取权限组的详细信息
+         */
+        function edit() {
+
+        }
+        /**
+         * 保存权限组
+         */
+        function Save() {
+            var title = $('#title_').val();
+            var id = $('#id').val();
+            if (!title){
+                swal({
+                    title : 'Title can not be Empty !',
+                    type  : 'error',
+                    timer : 2000,
+                    showConfirmButton : false
+                });
+                return message('','Title can not be Empty !');
+            }
+            var data = {id:id,title:title,rules:$('#rules').val()};
+            $.post("{:U(add)}",data,function (res) {
+
+                message('','Success',res.status);
+                if (res.url){window.location.href = res.url;}
+            },"JSON");
+        }
+    </script>
 </block>
