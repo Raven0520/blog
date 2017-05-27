@@ -3,7 +3,7 @@
 <block name="action-area">
     <div class="col-sm-8">
         <div class="title-action col-sm-10">
-            <a class="btn btn-primary col-sm-2 col-sm-offset-12">Save</a>
+            <a class="btn btn-primary col-sm-2 col-sm-offset-12" onclick="Save()">Save</a>
         </div>
     </div>
 </block>
@@ -13,22 +13,13 @@
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
-                    <div class="col-sm-2" style="padding-left: 3px">
-                        <select class="form-control" style="margin-top: -8px;" name="title" id="title">
-                            <option value="0">Choose Auth Group</option>
-                            <foreach name="AuthGroup" item="v">
-                                <option value="{$v.id}">{$v.title}</option>
-                            </foreach>
-                        </select>
-                    </div>
-                    <h5>Auth Rule</h5>
+                    <h5>Auth Group</h5>
                     <div class="ibox-tools">
+                        <foreach name="AuthGroup" item="v">
+                            <button type="button" id="group{$v.id}" class="btn btn-xs btn-default pull-left m-l-xs group-btn" style="margin-top: -3px" onclick="chooseGroup('{$v.id}','{$v.title}','{$v.rules}')">{$v.title}</button>
+                        </foreach>
 
                         <a class="add-link" data-toggle="modal" data-target="#add">
-                            <i class="fa fa-plus"></i>
-                        </a>
-
-                        <a class="add-link" data-toggle="modal" data-target="#add" onclick="edit()">
                             <i class="fa fa-edit"></i>
                         </a>
 
@@ -47,13 +38,13 @@
                         <volist name="$v[second]" id="vo">
                             <button onclick="choose('{$vo.id}',2)" type="button" id="{$vo.id}" class="btn btn-default m-r" style="width: 160px"><i class="{$vo.icon} m-r-sm"></i>{$vo.title}</button>
                             <volist name="$vo[other]" id="val">
-                                <button onclick="choose('{$val.id}',3)" id="{$val.id}" class="btn btn-circle btn-outline btn-info btn-xs m-r-sm" type="button"><i class="{$val.icon}"></i></button>
+                                <button onclick="choose('{$val.id}',3)" id="{$val.id}" class="btn btn-circle btn-default btn-xs m-r-sm" type="button"><i class="{$val.icon}"></i></button>
                             </volist>
                         </volist>
                         <br/>
                     </foreach>
 
-                    <input type="text" class="form-control" id="rules" readonly>
+                    <input type="hidden" class="form-control" id="rules">
                 </div>
             </div>
         </div>
@@ -74,14 +65,13 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Title</label>
                             <div class="col-sm-8">
-                                <input class="form-control m-b" name="title" id="title_"/>
+                                <input class="form-control m-b" name="title" id="title_" autofocus/>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="Save()">Save</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
                 </div>
             </div>
         </div>
@@ -95,33 +85,29 @@
 
         function choose(id,type) {
 
-            if (type == 1 | type == 2){
-                changeClass(id,'btn-default','btn-info');
+            changeClass(id,'btn-default','btn-info');
 
-                $.ajax({
-                    type : "POST",
-                    data : {id:id},
-                    url  : "/AuthRule/getRules",
-                    success : function (res) {
-                        if (res.sec){
-                            $.each(res.sec,function (i,v) {
-                                1 == type && changeClass(v,'btn-default','btn-info');
-                                2 == type && changeClass(v,'btn-outline btn-info','btn-info');
-                            });
-                        }
-                        if (type == 1){
-                            if (res.oth){
-                                $.each(res.oth,function (i,v) {
-                                    changeClass(v,'btn-outline btn-info','btn-info');
-                                })
-                            }
-                        }
-                        updateRule();
+            $.ajax({
+                type : "POST",
+                data : {id:id},
+                url  : "/AuthRule/getRules",
+                success : function (res) {
+                    if (res.sec){
+                        $.each(res.sec,function (i,v) {
+                            1 == type && changeClass(v,'btn-default','btn-info');
+                            2 == type && changeClass(v,'btn-default','btn-info');
+                        });
                     }
-                })
-            }else {
-                changeClass(id,'btn-outline btn-info','btn-info');
-            }
+                    if (type == 1){
+                        if (res.oth){
+                            $.each(res.oth,function (i,v) {
+                                changeClass(v,'btn-default','btn-info');
+                            })
+                        }
+                    }
+                    updateRule();
+                }
+            })
         }
 
         /**
@@ -137,6 +123,7 @@
             0 != bool && rules.push(id);
             0 == bool && target.removeClass(replace).addClass(origin);
             0 == bool && removeRules(rules,id);
+            console.log(rules);
         }
 
         /**
@@ -149,18 +136,35 @@
         }
 
         /**
+         * 设置规则组名
+         */
+
+
+        /**
          * 设置规则字符串
          */
         function updateRule() {
             rule_text = rules.join(',');
             $('#rules').val(rule_text);
         }
+        function chooseGroup(id,name,rule) {
+            $('.group-btn').removeClass('btn-primary').addClass('btn-default');
+            var target = $('#group'+id);
+            var cls  = target.attr('class');
+            var bool = cls.indexOf('btn-default') + 1;
 
-        /**
-         * 获取权限组的详细信息
-         */
-        function edit() {
-
+            if (bool != 0){
+                target.removeClass('btn-default').addClass('btn-primary');
+                set.set_by_id({title_:'name',id:''},{id:id,name:name},1);
+            }else {
+                target.removeClass('btn-primary').addClass('btn-default');
+                clean.clean_by_id(['title_','id'],1);
+            }
+            $('#rules').val(rule);
+            rules = rule.split(',');
+            $.each(rules,function (i,v) {
+                $('#'+v).removeClass('btn-default').addClass('btn-info').removeClass('btn-outline');
+            })
         }
         /**
          * 保存权限组
@@ -169,19 +173,11 @@
             var title = $('#title_').val();
             var id = $('#id').val();
             if (!title){
-                swal({
-                    title : 'Title can not be Empty !',
-                    type  : 'error',
-                    timer : 2000,
-                    showConfirmButton : false
-                });
-                return message('','Title can not be Empty !');
+                return swal('Title can not be Empty !','','error');
             }
             var data = {id:id,title:title,rules:$('#rules').val()};
             $.post("{:U(add)}",data,function (res) {
-
-                message('','Success',res.status);
-                if (res.url){window.location.href = res.url;}
+                return swal(res.info,'','success');
             },"JSON");
         }
     </script>

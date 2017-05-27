@@ -248,7 +248,10 @@
         function edit() {
             var id = $("#id").val();
             if (!id){
-                return message('','Id is missing !');
+                return swal({
+                    title : 'ID can not be Empty !',
+                    type  : 'error'
+                });
             }
             $('#add').modal('show');
         }

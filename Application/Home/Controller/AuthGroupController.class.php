@@ -28,7 +28,7 @@ class AuthGroupController extends EmptyController
             $this->assign($second_name,$second);
         }
         $this->assign('menu',$menu);
-
+        $this->assign('AuthGroup',$this->getList());
         $this->display();
     }
 }
