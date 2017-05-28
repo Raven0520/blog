@@ -29,3 +29,34 @@ var set = {
         })
     }
 };
+
+var submit = {
+    submit : function (url,data) {
+        if (!data){
+            data = $('#submitForm').serialize();
+        }
+        $.post(url,data,function (res) {
+            message.message(res);
+        })
+    }
+};
+
+var message = {
+    message : function (info) {
+        if (info.status == 1 && info.url){
+            return swal({
+                title : info.info,
+                timer : 1500,
+                type  : 'success',
+                showConfirmButton : false
+            },function () {
+                window.location.href = info.url;
+            })
+        }
+        if (info.status == 1){
+            return swal(info.info,'','success');
+        }else {
+            return swal(info.info,'','error');
+        }
+    }
+};

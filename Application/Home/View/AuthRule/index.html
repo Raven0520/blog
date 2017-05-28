@@ -179,6 +179,8 @@
 
             var icon = '{$icon}';
             var menu = '{$menu}';
+            var second = [];
+            var third  = [];
             menu = JSON.parse(menu);
             icon = JSON.parse(icon);
             var types = {
@@ -194,19 +196,27 @@
             //加载菜单
             var html,type;
             $.each(menu,function (k,v) {
-                if (v.sort_id == 0){
+                if (v.menu_type == 0){
                     type = '{"type":"'+ v.title +'"}';
                     html = "<li data-jstree='"+ type +"')'><a href='#' onclick='info("+ v.id +")'>"+ v.title +"</a><ul id='sort_"+ v.id +"'></ul></li>";
                     $("#site").append(html);
-                }else if (v.sort_id == 1){
-                    type = '{"type":"'+ v.title +'"}';
-                    html = "<li id='second"+ v.id +"' data-jstree='"+ type +"'><button style='border: none;padding: 0' class='btn-link' onclick='info("+ v.id +")'>"+ v.title +"</button><ul id='sort_"+ v.id +"'></ul></li>";
-                    $('#sort_' + v.sort_id).append(html);
+                }else if (v.menu_type == 1){
+                    second.push(v);
                 }else {
-                    type = '{"type":"'+ v.title +'"}';
-                    html = "<li id='second"+ v.id +"' data-jstree='"+ type +"'><button style='border: none;padding: 0' class='btn-link' onclick='info("+ v.id +")'>"+ v.title +"</button></li>";
-                    $('#sort_' + v.sort_id).append(html);
+                    third.push(v);
                 }
+            });
+            
+            $.each(second,function (k,v) {
+                type = '{"type":"'+ v.title +'"}';
+                html = "<li data-jstree='"+ type +"'><button style='border: none;padding: 0' class='btn-link' onclick='info("+ v.id +")'>"+ v.title +"</button><ul id='sort_"+ v.id +"'></ul></li>";
+                $('#sort_' + v.sort_id).append(html);
+            });
+
+            $.each(third,function (k,v) {
+                type = '{"type":"'+ v.title +'"}';
+                html = "<li data-jstree='"+ type +"'><button style='border: none;padding: 0' class='btn-link' onclick='info("+ v.id +")'>"+ v.title +"</button></li>";
+                $('#sort_' + v.sort_id).append(html);
             });
 
             $('#tree').jstree({
@@ -281,12 +291,11 @@
             if (!name){
                 return message('','Name Can not be none !');
             }
-            var data = $("form").serialize();
 
-            $.post("{:U('add')}",data,function (res) {
-                $('#add').modal('hide');
-                return message('',res.info,res.status);
-            },"JSON");
+            var url = "{:U('add')}";
+            var data = $("form").serialize();
+            $('#add').modal('hide');
+            submit.submit(url,data);
         }
     </script>
 </block>

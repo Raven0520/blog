@@ -136,4 +136,11 @@ class CommonController extends Controller
     protected function getList($model = CONTROLLER_NAME){
         return $this->lists($model,$this->where,$this->field,$this->order,false);
     }
+
+    /**
+     * 获取特殊排列的数据
+     */
+    protected function getFiled($model = CONTROLLER_NAME){
+        return M($model)->where($this->where)->getField($this->field);
+    }
 }

@@ -176,9 +176,8 @@
                 return swal('Title can not be Empty !','','error');
             }
             var data = {id:id,title:title,rules:$('#rules').val()};
-            $.post("{:U(add)}",data,function (res) {
-                return swal(res.info,'','success');
-            },"JSON");
+            var url  = "{:U(add)}";
+            submit.submit(url,data);
         }
     </script>
 </block>

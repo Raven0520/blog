@@ -65,7 +65,7 @@ class EmptyController extends CommonController
             $model->startTrans();
             if (false !== $model->update()) {
                 $model->commit();
-                $this->success('操作成功', U('/'.CONTROLLER_NAME));
+                $this->success('Success', U('/'.CONTROLLER_NAME));
             } else {
                 $model->rollback();
                 $this->error($model->getError());
