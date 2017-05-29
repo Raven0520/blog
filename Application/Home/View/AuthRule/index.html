@@ -236,11 +236,11 @@
             $.post("{:U('edit')}",{id:id},function (info) {
                 $(".rule-box").removeClass('form-group');
                 param = {title:'',menu_type_name:'',previous:'',rule:'name'};
-                set.set_by_id(param,info,2);
+                fill.fill_by_id(param,info,2);
 
                 //对模态框写入数据
                 param = {id:'',sort_id:'',menu_type:'menu_type',title_:'title',icon_:'icon',name:'',list_order:''};
-                set.set_by_id(param,info,1);
+                fill.fill_by_id(param,info,1);
                 $("#menu_icon").removeClass().addClass(info.icon);
                 $("#icon").removeClass().addClass(info.icon);
 
@@ -292,7 +292,7 @@
                 return message('','Name Can not be none !');
             }
 
-            var url = "{:U('add')}";
+            var url = "{:U('Add')}";
             var data = $("form").serialize();
             $('#add').modal('hide');
             submit.submit(url,data);

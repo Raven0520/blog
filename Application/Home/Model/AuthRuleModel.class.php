@@ -10,6 +10,8 @@ use Common\Model\CommonModel;
  */
 class AuthRuleModel extends CommonModel
 {
+    protected $_auto = [];
+
     protected $menu_type = [
         0 => 'Top Menu',
         1 => 'Second Menu',

@@ -1,2 +1,39 @@
 <extend name="Common/index" />
 
+<block name="action-area">
+    <div class="col-sm-8">
+        <div class="title-action">
+            <input type="text" id="token" style="border: none">
+            <a id="register" onclick="getToken()" class="btn btn-primary">Register Token</a>
+        </div>
+    </div>
+
+    <form>
+        <input type="hidden" name="id" value="" id="id">
+        <input type="hidden" name="name" value="register">
+        <input type="hidden" name="expired" value="1">
+        <input type="hidden" name="action" value="1" id="action">
+    </form>
+</block>
+
+<block name="script">
+    <script>
+        var register = $('#register');
+        var token = $('#token');
+
+        function getToken() {
+            var action = $('#action');
+            getInfo.getToken("{:U('Config/getToken')}",{token:'value',id:'id'},1);
+            if (action.val() == 1){
+                action.val(2);
+                token.show();
+                register.html('Refresh Token');
+            }else {
+                action.val(1);
+                token.hide();
+                register.html('Register Token');
+            }
+        }
+
+    </script>
+</block>

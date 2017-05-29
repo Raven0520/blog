@@ -16,6 +16,8 @@ class CommonModel extends RelationModel
     protected $_data = array();
 
     protected $_auto = array(
+        array('create_time', NOW_TIME, 1),
+        array('update_time', NOW_TIME, 2)
     );
 
     public function update($data = null) {
@@ -44,5 +46,22 @@ class CommonModel extends RelationModel
 //        return empty ($data [$ob->pk]) ? $ob->add() : $ob->save();
 //        };
 //        return Db::transaction($fun);
+    }
+
+    public function _update($data = null)
+    {
+        $this->_data = $data;
+
+        //transaction 在model.class.php 与 Drive.class.php 中添加了 transaction方法
+
+        return Db::transaction(function ($model) {
+            $data = empty($model->_data) ? $_POST : $model->_data;
+            '自动编号' == $data['id'] && $data['id'] = '';
+            $data = $model->create($data);
+            if (!$data) {
+                return false;
+            }
+            return empty ($data [$model->getPk()]) ? $model->add() : $model->save();
+        }, $this);
     }
 }
