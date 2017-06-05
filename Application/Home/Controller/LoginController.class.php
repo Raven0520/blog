@@ -51,7 +51,7 @@ class LoginController extends Controller
             $res = D('User')->_update($_POST);
             if ($res){
                 $info = [
-                    'info' => 'Register Success !',1
+                    'info' => 'Register Success !',
                     'status' => 1,
                     'url' => '/'
                 ];
