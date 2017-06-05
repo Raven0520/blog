@@ -27,6 +27,7 @@ class LoginController extends Controller
         }elseif (getMD5($_POST['password']) != $user['password']){
             $info = ['info'=>'密码错误','status'=>2];
         }else{
+            $this->updateUser($user['id']);
             $info = ['info'=>'欢迎回来','status'=>1,'url'=>'/'];
         }
         S('User',$user);
@@ -64,5 +65,31 @@ class LoginController extends Controller
         }
 
         $this->display();
+    }
+
+    /**
+     * 获取用户登录IP
+     */
+    public function getIp(){
+        $ip = '';
+        if (getenv("HTTP_CLIENT_IP")) {
+            $ip = getenv("HTTP_CLIENT_IP");
+        } elseif (getenv("HTTP_X_FORWARDED_FOR")) {
+            $ip = getenv("HTTP_X_FORWARDED_FOR");
+        } elseif (getenv("REMOTE_ADDR")) {
+            $ip = getenv("REMOTE_ADDR");
+        } else {
+            $ip = 'UnKnow';
+        }
+        return $ip;
+    }
+
+    /**
+     * @param $id
+     */
+
+    public function updateUser($id){
+        //获取用户IP地址
+        
     }
 }
