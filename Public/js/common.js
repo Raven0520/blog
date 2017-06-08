@@ -62,6 +62,20 @@ var getInfo = {
                 message.message({info:res.info,status:res.status});
             }
         },"JSON");
+    },
+    
+    getInfo : function (url,data,set) {
+        $.post(url,data,function (res) {
+            if (res.status == 1){
+                $.each(set,function (i,v) {
+                    console.log(v);
+                    fill.fill_by_id(v.set,res,v.type);
+                });
+                return;
+            }else {
+                message.message({info:res.info,status:res.status});
+            }
+        },"JSON");
     }
 };
 

@@ -18,6 +18,7 @@ class EmptyController extends CommonController
     protected $pages = array();
     protected $model = '';
     protected $order = '';
+    protected $user  = [];
 
     public function _initialize()
     {
@@ -35,6 +36,10 @@ class EmptyController extends CommonController
             $menu[$k]['second'] = $second_name;
             $this->assign($second_name,$second);
         }
+        $this->user = S('User');
+
+        '' != I('id') && $this->assign('id',I('id'));
+        $this->assign('User',$this->user);
         $this->assign('nav_menu',$menu);
         $this->where['status'] = array('neq', -1);
     }

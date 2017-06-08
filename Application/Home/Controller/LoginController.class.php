@@ -71,7 +71,6 @@ class LoginController extends Controller
      * 获取用户登录IP
      */
     public function getIp(){
-        $ip = '';
         if (getenv("HTTP_CLIENT_IP")) {
             $ip = getenv("HTTP_CLIENT_IP");
         } elseif (getenv("HTTP_X_FORWARDED_FOR")) {
@@ -90,6 +89,8 @@ class LoginController extends Controller
 
     public function updateUser($id){
         //获取用户IP地址
-        
+        $data['login_ip'] = $this->getIp();
+        $data['login_time'] = time();
+        D('User')->where(['id'=>$id])->save($data);
     }
 }

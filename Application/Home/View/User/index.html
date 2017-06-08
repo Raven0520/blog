@@ -16,6 +16,36 @@
     </form>
 </block>
 
+<block name="content">
+    <div class="row">
+        <foreach name="data" item="v">
+            <div class="col-lg-4">
+                <div class="contact-box">
+                    <a href="{:U('profile',array('id'=>$v['id']))}">
+                        <div class="col-sm-4">
+                            <div class="text-center">
+                                <img alt="image" class="img-circle m-t-xs img-responsive" src="{$v.head_img}">
+                                <div class="m-t-xs font-bold">{$v.group}</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <h3><strong>{$v.nickname}</strong>
+                                <small>&nbsp;&nbsp;{$v.login_time|date='Y-m-d H:i',###}</small>
+                            </h3>
+                            <p><i class="fa fa-phone-square"></i> {$v.qq}</p>
+                            <p><i class="fa fa-qq"></i> {$v.qq}</p>
+                            <p><i class="fa fa-wechat"></i> {$v.qq}</p>
+                            <!--<p><i class="fa fa-weibo"></i> {$v.qq}</p>-->
+                            <!--<p><i class="fa fa-sign-in"></i> </p>-->
+                        </div>
+                        <div class="clearfix"></div>
+                    </a>
+                </div>
+            </div>
+        </foreach>
+    </div>
+</block>
+
 <block name="script">
     <script>
         var register = $('#register');

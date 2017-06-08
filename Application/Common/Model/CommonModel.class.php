@@ -20,7 +20,8 @@ class CommonModel extends RelationModel
         array('update_time', NOW_TIME, 2)
     );
 
-    public function update($data = null) {
+    public function update($data = null)
+    {
         $this->_data = $data;
 
         //transaction 在model.class.php 与 Drive.class.php 中添加了 transaction方法
@@ -63,5 +64,13 @@ class CommonModel extends RelationModel
             }
             return empty ($data [$model->getPk()]) ? $model->add() : $model->save();
         }, $this);
+    }
+
+    /**
+     * 获取id为键的列表的方法
+     */
+    public function getDataKeyById($model = CONTROLLER_NAME, $where = null, $field, $sepa = null)
+    {
+        return D($model)->where($where)->getField($field, $sepa);
     }
 }
