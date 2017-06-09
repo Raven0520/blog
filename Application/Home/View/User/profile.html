@@ -1,10 +1,19 @@
 <extend name="Common/index"/>
 
+<block name="action-area">
+    <div class="col-sm-8">
+        <div class="title-action">
+            <a onclick="getGroups()" class="btn btn-primary">Change Group</a>
+        </div>
+    </div>
+</block>
+
 <block name="content">
     <div class="row animated fadeInRight">
         <div class="col-md-4">
             <div class="ibox float-e-margins">
                 <input type="hidden" id="id" value="{$id}">
+                <input type="hidden" id="group_id">
                 <div class="ibox-title">
                     <h5>Profile Detail</h5>
                 </div>
@@ -206,6 +215,24 @@
         </div>
     </div>
     </div>
+
+    <div class="modal inmodal" id="change_group" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Change Group</h4>
+                </div>
+                <div class="modal-body" id="group_body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="Save()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </block>
 
 <block name="script">
@@ -213,12 +240,47 @@
         $(function () {
             var id = $('#id').val();
             if (id) {
-                var html = {set : {nickname : 'nickname'}, type : 2};
-                var val = {set : {}, type : 1};
+                var html = {set : {nickname : ''}, type : 2};
+                var val = {set : {group_id:''}, type : 1};
                 var set = {0 : html, 1 : val};
                 getInfo.getInfo("{:U('edit')}", {id : id}, set);
             }
         });
+        
+        function getGroups() {
+            var group_id = $('#group_id').val();
+            var html,style;
+            $.post("{:U('AuthGroup/getData')}",{status:1},function (res) {
+                if (res != ''){
+                    $.each(res,function (i,v) {
+                        if (group_id == v.id){
+                            style = 'btn btn-primary btn-rounded m-l-sm';
+                        }else {
+                            style = 'btn btn-primary btn-rounded m-l-sm btn-outline';
+                        }
+                        html = "<button class='"+ style +"' title='"+ v.id +"' onclick='changeGroup(this)'>"+ v.title +"</button>";
+                        $('#group_body').append(html);
+                    });
+                    $('#change_group').modal('show');
+                }else {
+                    message.message({info:'Auth Group do not Exist',status:2})
+                }
+            },"JSON");
+        }
+        function changeGroup(info) {
+            $('#group_body :button').addClass('btn-outline');
+            var button = $(info);
+            button.removeClass('btn-outline');
+            $('#group_id').val(button.attr('title'));
+        }
+        
+        function Save() {
+            var id = $('#id').val();
+            var group_id = $('#group_id').val();
+            var data = {id:id,group_id:group_id,skipping_link:window.location.href};
+            var url = "{:U('add')}";
+            submit.submit(url,data);
+        }
 
     </script>
 </block>

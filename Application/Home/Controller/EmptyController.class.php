@@ -41,7 +41,7 @@ class EmptyController extends CommonController
         '' != I('id') && $this->assign('id',I('id'));
         $this->assign('User',$this->user);
         $this->assign('nav_menu',$menu);
-        $this->where['status'] = array('neq', -1);
+        '' != I('status') ? $this->where['status'] = I('status') : $this->where['status'] = ['neq',-1];
     }
 
     public function __empty()
@@ -59,6 +59,13 @@ class EmptyController extends CommonController
         $this->display();
     }
 
+    /**
+     * 获取数据列表 ajax
+     */
+    public function getData(){
+        $this->ajaxReturn($this->select(CONTROLLER_NAME, $this->where));
+    }
+
 
     /**
      * 信息新增或修改操作
@@ -66,11 +73,15 @@ class EmptyController extends CommonController
     public function add()
     {
         if (IS_POST) {
+            $url = U('/'.CONTROLLER_NAME);
+            if (I('skipping_link')){
+                $url = I('skipping_link');
+            }
             $model = D(CONTROLLER_NAME);
             $model->startTrans();
             if (false !== $model->update()) {
                 $model->commit();
-                $this->success('Success', U('/'.CONTROLLER_NAME));
+                $this->success('Success', $url);
             } else {
                 $model->rollback();
                 $this->error($model->getError());

@@ -27,6 +27,9 @@ class CommonModel extends RelationModel
         //transaction 在model.class.php 与 Drive.class.php 中添加了 transaction方法
 
         $data = empty($this->_data) ? $_POST : $this->_data;
+        if ($data['skipping_link']){
+            unset($data['skipping_link']);
+        }
         '自动编号' == $data['id'] && $data['id'] = '';
         $data = $this->create($data);
         if (!$data) {
