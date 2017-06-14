@@ -78,6 +78,13 @@ var getInfo = {
     }
 };
 
+var check = {
+
+    Auth : function () {
+        
+    }
+};
+
 var message = {
     message : function (info) {
         if (info.status == 1 && info.url){
@@ -93,7 +100,17 @@ var message = {
         if (info.status == 1){
             if (!info.info){info.info = 'Success';}
             return swal(info.info,'','success');
-        }else if(info.status == 2){
+        }else if (info.status == 2 && info.url){
+            return swal({
+                title : info.info,
+                timer : 1500,
+                type  : 'error',
+                showConfirmButton : false
+            },function () {
+                window.location.href = info.url;
+            })
+        }
+        else if(info.status == 2){
             return swal({
                 title : info.info,
                 timer : 1500,

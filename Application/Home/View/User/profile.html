@@ -252,6 +252,8 @@
             var html,style;
             $.post("{:U('AuthGroup/getData')}",{status:1},function (res) {
                 if (res != ''){
+                    //清空组别  重新生成
+                    $('#group_body button').remove();
                     $.each(res,function (i,v) {
                         if (group_id == v.id){
                             style = 'btn btn-primary btn-rounded m-l-sm';

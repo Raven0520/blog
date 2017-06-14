@@ -9,4 +9,19 @@
 <script src="/Public/js/plugins/pace/pace.min.js"></script>
 <script src="/Public/js/sweetalert/dist/sweetalert.min.js"></script>
 <script src="/Public/js/common.js"></script>
+<h1>{$auth}
+</h1>
 <block name="footer-end"></block>
+
+<script>
+    $(function () {
+        var user = '{$User.id}';
+        if (user) {
+            $('#sign_in').hide();
+            $('#sign_out').show();
+        } else {
+            $('#sign_in').show();
+            $('#sign_out').hide();
+        }
+    })
+</script>

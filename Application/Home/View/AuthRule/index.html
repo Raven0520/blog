@@ -178,6 +178,7 @@
         $(function () {
 
             var icon = '{$icon}';
+            console.log(icon);
             var menu = '{$menu}';
             var second = [];
             var third = [];
@@ -187,7 +188,8 @@
                 'default' : {'icon' : 'fa fa-list'},
                 'Add'     : {'icon' : 'fa fa-plus'},
                 'Edit'    : {'icon' : 'fa fa-pencil'},
-                'Del'     : {'icon' : 'fa fa-close'}
+                'Del'     : {'icon' : 'fa fa-close'},
+                'Profile' : {'icon' : 'fa fa-github'}
             };
             $.each(icon, function (i, v) {
                 types[v.title] = {'icon' : v.icon};

@@ -30,7 +30,7 @@ class LoginController extends Controller
             $this->updateUser($user['id']);
             $info = ['info'=>'欢迎回来','status'=>1,'url'=>'/'];
         }
-        S('User',$user);
+        session('User',$user);
         $this->ajaxReturn($info);
     }
 
@@ -92,5 +92,15 @@ class LoginController extends Controller
         $data['login_ip'] = $this->getIp();
         $data['login_time'] = time();
         D('User')->where(['id'=>$id])->save($data);
+    }
+
+    /**
+     * 退出操作
+     */
+    public function loginOut(){
+        $user = session('User');
+        $this->updateUser($user['id']);
+        session('User',null);
+        return redirect('/login');
     }
 }

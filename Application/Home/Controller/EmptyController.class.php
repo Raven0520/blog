@@ -9,6 +9,7 @@
 namespace Home\Controller;
 
 use Common\Controller\CommonController;
+use Think\Auth;
 
 class EmptyController extends CommonController
 {
@@ -19,6 +20,7 @@ class EmptyController extends CommonController
     protected $model = '';
     protected $order = '';
     protected $user  = [];
+    protected $auth  = '';
 
     public function _initialize()
     {
@@ -36,12 +38,39 @@ class EmptyController extends CommonController
             $menu[$k]['second'] = $second_name;
             $this->assign($second_name,$second);
         }
-        $this->user = S('User');
-
+        $this->user = session('User');
+        $this->checkAuth();
         '' != I('id') && $this->assign('id',I('id'));
         $this->assign('User',$this->user);
         $this->assign('nav_menu',$menu);
         '' != I('status') ? $this->where['status'] = I('status') : $this->where['status'] = ['neq',-1];
+    }
+
+    /**
+     * 权限验证的方法
+     */
+    public function checkAuth()
+    {
+        //判断用户是否有权限
+        $auth = new Auth();
+        $action = ACTION_NAME;
+        $controller = CONTROLLER_NAME;
+        if ($action == 'Status' || $action == 'ListOrder'){
+            $action = 'edit';
+        }
+        if ($action == 'getData' || $action == 'getList' || $action == 'getRules'){
+            $action = 'index';
+        }
+        $this->auth = $auth->check('/'.$controller.'/'.$action,$this->user['id']);
+        'Index' == $controller && $action == 'index' && $this->auth = true;
+//        1 == $this->user['id'] && $this->auth = true;
+
+        if ($this->auth == false){
+            if (empty($this->user)){
+                redirect('/login');
+            }
+            redirect('/login/permission');
+        }
     }
 
     public function __empty()

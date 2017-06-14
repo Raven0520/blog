@@ -31,7 +31,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="ibox-content" style="line-height: 3.2">
+                <div class="ibox-content" style="line-height: 3.2" id="auth_rules">
 
                     <foreach name="menu" item="v">
                         <button onclick="choose('{$v.id}',1)" id="{$v.id}" type="button" class="btn btn-default m-r" style="width: 160px"><i class="{$v.icon} m-r-sm"></i>{$v.title}</button>
@@ -149,6 +149,7 @@
         }
         function chooseGroup(id,name,rule) {
             $('.group-btn').removeClass('btn-primary').addClass('btn-default');
+            $('#auth_rules button').removeClass('btn-info').addClass('btn-default');
             var target = $('#group'+id);
             var cls  = target.attr('class');
             var bool = cls.indexOf('btn-default') + 1;
