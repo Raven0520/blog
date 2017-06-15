@@ -17,8 +17,11 @@
                     <li>
                         <a href="/">Home</a>
                     </li>
+                    <li>
+                        <a href="/{:CONTROLLER_NAME}">{:CONTROLLER_NAME}</a>
+                    </li>
                     <li class="active">
-                        <strong>Breadcrumb</strong>
+                        <strong>{:ACTION_NAME}</strong>
                     </li>
                 </ol>
             </div>
@@ -31,16 +34,18 @@
             </block>
         </div>
 
-        <div class="wrapper wrapper-content">
-            <block name="content">
+
+        <block name="content">
+            <div class="wrapper wrapper-content">
                 <h3 class="font-bold">This is page content</h3>
                 <div class="error-desc">
                     You can create here any grid layout you want. And any variation layout you imagine:) Check out
                     main dashboard and other site. It use many different layout.
                     <br/><a href="index.html" class="btn btn-primary m-t">Dashboard</a>
                 </div>
-            </block>
-        </div>
+            </div>
+
+        </block>
         <div class="footer">
             <div class="pull-right">
                 10GB of <strong>250GB</strong> Free.

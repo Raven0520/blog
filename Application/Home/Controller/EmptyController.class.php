@@ -39,6 +39,7 @@ class EmptyController extends CommonController
             $this->assign($second_name,$second);
         }
         $this->user = session('User');
+        $this->user['id'] && $this->user['head_img'] = M('user')->where(['id'=>$this->user['id']])->getField('head_img');
         $this->checkAuth();
         '' != I('id') && $this->assign('id',I('id'));
         $this->assign('User',$this->user);
@@ -63,6 +64,7 @@ class EmptyController extends CommonController
         }
         $this->auth = $auth->check('/'.$controller.'/'.$action,$this->user['id']);
         'Index' == $controller && $action == 'index' && $this->auth = true;
+        'Blog'  == $controller && $action == 'index' && $this->auth = true;
 //        1 == $this->user['id'] && $this->auth = true;
 
         if ($this->auth == false){

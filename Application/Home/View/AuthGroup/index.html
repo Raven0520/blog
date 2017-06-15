@@ -9,6 +9,7 @@
 </block>
 
 <block name="content">
+    <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-12">
             <div class="ibox float-e-margins">
@@ -48,6 +49,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
 
@@ -123,7 +125,6 @@
             0 != bool && rules.push(id);
             0 == bool && target.removeClass(replace).addClass(origin);
             0 == bool && removeRules(rules,id);
-            console.log(rules);
         }
 
         /**
@@ -145,7 +146,7 @@
          */
         function updateRule() {
             rule_text = rules.join(',');
-            $('#rules').val(rule_text);1
+            $('#rules').val(rule_text);
         }
         function chooseGroup(id,name,rule) {
             $('.group-btn').removeClass('btn-primary').addClass('btn-default');

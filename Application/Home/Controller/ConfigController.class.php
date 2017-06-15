@@ -34,32 +34,4 @@ class ConfigController extends EmptyController
         }
         $this->ajaxReturn($token);
     }
-
-    public function setToken()
-    {
-        1 == I('expired') && $this->where['expired_time'] = ['lt', time()];
-        $name = I('name');
-        $id = M($this->model)->where(['name' => $name])->getField('id');
-        $data = [
-            'id'    => $id,
-            'name'  => $name,
-            'value' => md5($name . time()),
-        ];
-        1 == I('expired') && $data['expired_time'] = time() + 86400;
-        $res = D($this->model)->_update($data);
-
-        if ($res) {
-            $info = [
-                'status' => 1,
-                'info'   => '刷新成功',
-                'value'  => $data['value']
-            ];
-        } else {
-            $info = [
-                'status' => 0,
-                'info'   => '刷新失败'
-            ];
-        }
-        $this->ajaxReturn($info);
-    }
 }

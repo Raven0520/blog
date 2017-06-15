@@ -47,8 +47,12 @@ class LoginController extends Controller
             }
             $_POST['password'] = getMD5($_POST['password']);
             $_POST['group_id'] = 2;
+            $data = $_POST;
+            $head_img = scandir('Public/head_img');
+            unset($head_img[0]);unset($head_img[1]);unset($head_img[2]);sort($head_img);
 
-            $res = D('User')->_update($_POST);
+            $data['head_img'] = '/Public/head_img/'.$head_img[rand(0,count($head_img)-1)];
+            $res = D('User')->_update($data);
             if ($res){
                 $info = [
                     'info' => 'Register Success !',

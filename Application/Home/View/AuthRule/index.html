@@ -4,6 +4,7 @@
 </block>
 
 <block name="content">
+    <div class="wrapper wrapper-content animated fadeInRight">
     <div class="row">
         <div class="col-lg-6">
             <div class="ibox float-e-margins">
@@ -83,6 +84,7 @@
                 <!--菜单id-->
             </div>
         </div>
+    </div>
     </div>
 
     <div class="modal inmodal" id="add" tabindex="-1" role="dialog" aria-hidden="true">
@@ -178,18 +180,18 @@
         $(function () {
 
             var icon = '{$icon}';
-            console.log(icon);
             var menu = '{$menu}';
             var second = [];
             var third = [];
             menu = JSON.parse(menu);
             icon = JSON.parse(icon);
             var types = {
-                'default' : {'icon' : 'fa fa-list'},
-                'Add'     : {'icon' : 'fa fa-plus'},
-                'Edit'    : {'icon' : 'fa fa-pencil'},
-                'Del'     : {'icon' : 'fa fa-close'},
-                'Profile' : {'icon' : 'fa fa-github'}
+                'default'  : {'icon' : 'fa fa-list'},
+                'Add'      : {'icon' : 'fa fa-plus'},
+                'Edit'     : {'icon' : 'fa fa-pencil'},
+                'Del'      : {'icon' : 'fa fa-close'},
+                'Profile'  : {'icon' : 'fa fa-github'},
+                'GetToken' : {'icon' : 'fa fa-key'}
             };
             $.each(icon, function (i, v) {
                 types[v.title] = {'icon' : v.icon};
