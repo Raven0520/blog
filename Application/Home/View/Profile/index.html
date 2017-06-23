@@ -26,12 +26,13 @@
                             <h4 id="nickname"><strong></strong></h4>
                             <p><i class="fa fa-map-marker"></i> Riviera State 32/106</p>
                             <h5>
-                                About me
+                                个性签名
                             </h5>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                                enim
-                                ad minim veniam, quis nostrud exercitat.
+                                <textarea id="sign" name="sign" cols="30" rows="3" class="form-control" readonly onclick="editText(this)" onblur="saveText(this,2)">
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                                enim ad minim veniam, quis nostrud exercitat.
+                                </textarea>
                             </p>
                             <div class="row m-t-lg">
                                 <div class="col-md-4">
@@ -278,6 +279,14 @@
             var button = $(info);
             button.removeClass('btn-outline');
             $('#group_id').val(button.attr('title'));
+        }
+
+        function editText(data) {
+            data.readOnly = false;
+        }
+        function saveText(data,type) {
+            var id = $('#id').val();
+
         }
 
         function Save() {

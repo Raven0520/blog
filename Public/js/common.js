@@ -4,27 +4,27 @@
 
 var clean = {
 
-    clean_by_id : function (tag,type) {
-        $.each(tag,function (i,v) {
-            if (type == 1){
-                $('#'+v).val('');
+    clean_by_id : function (tag, type) {
+        $.each(tag, function (i, v) {
+            if (type == 1) {
+                $('#' + v).val('');
             }
-            if (type == 2){
-                $('#'+v).html('');
+            if (type == 2) {
+                $('#' + v).html('');
             }
         })
     }
 };
 
 var fill = {
-    fill_by_id: function (tag,data,type) {
+    fill_by_id : function (tag, data, type) {
         var k;
-        $.each(tag,function (i,v) {
+        $.each(tag, function (i, v) {
             '' == v ? k = i : k = v;
-            if (type == 1){
-                $('#'+i).val(data[k]);
-            }else if(type == 2){
-                $('#'+i).html(data[k]);
+            if (type == 1) {
+                $('#' + i).val(data[k]);
+            } else if (type == 2) {
+                $('#' + i).html(data[k]);
             }
         })
     }
@@ -36,14 +36,14 @@ var fill = {
  */
 
 var submit = {
-    submit : function (url,data) {
-        if (!data){
+    submit : function (url, data) {
+        if (!data) {
             data = $('#submitForm').serialize();
         }
 
-        $.post(url,data,function (res) {
+        $.post(url, data, function (res) {
             message.message(res);
-        },"JSON");
+        }, "JSON");
     }
 };
 
@@ -53,77 +53,80 @@ var submit = {
  */
 var getInfo = {
 
-    getToken : function (url,set,type) {
+    getToken : function (url, set, type) {
         var data = $('form').serialize();
-        $.post(url,data,function (res) {
-            if (res.status == 1){
-                return fill.fill_by_id(set,res,type);
-            }else {
-                message.message({info:res.info,status:res.status});
+        $.post(url, data, function (res) {
+            if (res.status == 1) {
+                return fill.fill_by_id(set, res, type);
+            } else {
+                message.message({info : res.info, status : res.status});
             }
-        },"JSON");
+        }, "JSON");
     },
-    
-    getInfo : function (url,data,set) {
-        $.post(url,data,function (res) {
-            if (res.status == 1){
-                $.each(set,function (i,v) {
-                    fill.fill_by_id(v.set,res,v.type);
+
+    getInfo : function (url, data, set) {
+        $.post(url, data, function (res) {
+            if (res.status == 1) {
+                $.each(set, function (i, v) {
+                    fill.fill_by_id(v.set, res, v.type);
                 });
                 return;
-            }else {
-                message.message({info:res.info,status:res.status});
+            } else {
+                message.message({info : res.info, status : res.status});
             }
-        },"JSON");
+        }, "JSON");
     }
 };
 
 var check = {
 
     Auth : function () {
-        
+
     }
 };
 
 var message = {
     message : function (info) {
-        if (info.status == 1 && info.url){
+        if (info.status == 1) {
             return swal({
-                title : info.info,
-                timer : 1500,
-                type  : 'success',
+                title             : info.info,
+                timer             : 1500,
+                type              : 'success',
                 showConfirmButton : false
-            },function () {
-                window.location.href = info.url;
+            }, function () {
+                if (info.url) {
+                    window.location.href = info.url;
+                }
             })
-        }
-        if (info.status == 1){
-            if (!info.info){info.info = 'Success';}
-            return swal(info.info,'','success');
-        }else if (info.status == 2 && info.url){
+        } else if (info.status == 2) {
             return swal({
-                title : info.info,
-                timer : 1500,
-                type  : 'error',
+                title             : info.info,
+                timer             : 1500,
+                type              : 'error',
                 showConfirmButton : false
-            },function () {
-                window.location.href = info.url;
+            }, function () {
+                if (info.url) {
+                    window.location.href = info.url;
+                }
             })
-        }
-        else if(info.status == 2){
+        } else if (info.status == 9) {
             return swal({
-                title : info.info,
-                timer : 1500,
-                type  : 'error',
+                title             : '您没有权限进行该操作',
+                timer             : 1500,
+                type              : 'error',
                 showConfirmButton : false
+            }, function () {
+                if (info.url) {
+                    window.location.href = info.url;
+                }
             })
-        }else {
-            return swal(info.info,'','error');
+        } else {
+            return swal(info.info, '', 'error');
         }
     },
 
     //未开发的功能
     undo : function () {
-        message.message({info:'Coding',status:0});
+        message.message({info : 'Coding', status : 0});
     }
 };

@@ -71,7 +71,8 @@ class EmptyController extends CommonController
             if (empty($this->user)){
                 redirect('/login');
             }
-            redirect('/login/permission');
+            $this->assign('auth_status',9);
+            IS_AJAX && $this->ajaxReturn(['status'=>9]);
         }
     }
 

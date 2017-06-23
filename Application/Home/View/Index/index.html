@@ -15,7 +15,7 @@
                 <div class="">
                     <div>
                         <h2 class="no-margins">
-                            Alex Smith
+                            {$User.nickname}
                         </h2>
                         <h4>Founder of Groupeq</h4>
                         <small>
@@ -445,7 +445,7 @@
             var id = $('#user_id').val();
 
             $('#choose_head_img').modal('hide');
-            submit.submit("{:U('User/add')}",{id:id,head_img:head_img,skipping_link:'/'});
+            submit.submit("{:U('User/ChangeHeadImg')}",{id:id,head_img:head_img,skipping_link:'/'});
         }
     </script>
 </block>

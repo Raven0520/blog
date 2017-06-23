@@ -57,12 +57,19 @@
 
     </div>
 </div>
-
+<input type="hidden" id="auth_status" value="{$auth_status}">
 <include file="Common/Footer"/>
 
 
 </body>
 
 </html>
-
+<script>
+    $(function () {
+        var status = $('#auth_status').val();
+        if (status == 9){
+            message.message({status:status,url:document.referrer});
+        }
+    })
+</script>
 <block name="script"></block>

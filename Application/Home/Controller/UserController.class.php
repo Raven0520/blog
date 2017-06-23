@@ -11,4 +11,7 @@ namespace Home\Controller;
 
 class UserController extends EmptyController
 {
+    public function ChangeHeadImg(){
+        $this->add();
+    }
 }

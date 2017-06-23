@@ -23,5 +23,11 @@
             $('#sign_in').show();
             $('#sign_out').hide();
         }
+        var src = '{$User.head_img}';
+        if (!src){
+            src = '/Public/head_img/default.png';
+        }
+        $('#nav_head_img').attr('src',src);
     })
+
 </script>
