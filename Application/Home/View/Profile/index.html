@@ -3,7 +3,7 @@
 <block name="action-area">
     <div class="col-sm-8">
         <div class="title-action">
-            <a onclick="getGroups()" class="btn btn-primary">Change Group</a>
+            <a onclick="getGroups()" class="btn btn-primary" id="get_group">Change Group</a>
         </div>
     </div>
 </block>
@@ -15,6 +15,7 @@
                 <div class="ibox float-e-margins">
                     <input type="hidden" id="id" value="{$id}">
                     <input type="hidden" id="group_id">
+                    <input type="hidden" id="profile_id">
                     <div class="ibox-title">
                         <h5>Profile Detail</h5>
                     </div>
@@ -24,15 +25,12 @@
                         </div>
                         <div class="ibox-content profile-content">
                             <h4 id="nickname"><strong></strong></h4>
-                            <p><i class="fa fa-map-marker"></i> Riviera State 32/106</p>
+                            <p><i onclick="getLocation()" class="fa fa-map-marker"></i> Riviera State 32/106<a class="pull-right fa fa-edit" ></a></p>
                             <h5>
                                 个性签名
                             </h5>
                             <p>
-                                <textarea id="sign" name="sign" cols="30" rows="3" class="form-control" readonly onclick="editText(this)" onblur="saveText(this,2)">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                                enim ad minim veniam, quis nostrud exercitat.
-                                </textarea>
+                                <textarea id="sign" name="sign" cols="30" rows="3" class="form-control" onblur="saveText(this,1)"></textarea>
                             </p>
                             <div class="row m-t-lg">
                                 <div class="col-md-4">
@@ -241,15 +239,21 @@
 </block>
 
 <block name="script">
+    <script src="/Public/js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="/Public/js/demo/peity-demo.js"></script>
     <script>
+        var id = $('#id').val();
+        var group_id = "{$User.group_id}";
+
         $(function () {
-            var id = $('#id').val();
             if (id) {
-                var html = {set : {nickname : ''}, type : 2};
-                var val = {set : {group_id : ''}, type : 1};
-                var set = {0 : html, 1 : val};
-                getInfo.getInfo("{:U('edit')}", {id : id}, set);
+                init(id);
+                profile_init();
             }
+            var auth = {
+                get_group : '/User/add'
+            };
+            check.Auth(group_id,auth);
         });
 
         function getGroups() {
@@ -274,6 +278,27 @@
                 }
             }, "JSON");
         }
+
+        function init(id) {
+            var html = {set : {nickname : ''}, type : 2};
+            var val = {set : {group_id : '',profile_id:''}, type : 1};
+            var set = {0 : html, 1 : val};
+            getInfo.getInfo("{:U('User/edit')}", {id : id}, set);
+        }
+
+        function profile_init() {
+            var profile_id = $('#profile_id').val();
+
+            if (!profile_id){
+                setTimeout(function () {
+                    profile_init();
+                },1000);
+            }else {
+                var val = {set : {sign : ''}, type : 1};
+                var set = {1 : val};
+                getInfo.getInfo("{:U('edit')}", {id : profile_id}, set);
+            }
+        }
         function changeGroup(info) {
             $('#group_body :button').addClass('btn-outline');
             var button = $(info);
@@ -281,21 +306,33 @@
             $('#group_id').val(button.attr('title'));
         }
 
-        function editText(data) {
-            data.readOnly = false;
-        }
         function saveText(data,type) {
-            var id = $('#id').val();
-
+            var value;
+            var field = data.name;
+            var profile_id = $('#profile_id').val();
+            if (profile_id == 0){
+                profile_id = '';
+            }
+            var post = {id:profile_id,user_id:id};
+            if (type == 1){
+                value = data.value;
+            }else {
+                value = data.innerHTML;
+            }
+            post[field] = value;
+            $.post("{:U('add')}",post,function (res) {
+                if (res.status == 1){
+                    init(id);
+                }
+            },"JSON");
         }
 
         function Save() {
             var id = $('#id').val();
             var group_id = $('#group_id').val();
             var data = {id : id, group_id : group_id, skipping_link : window.location.href};
-            var url = "{:U('add')}";
+            var url = "{:U('User/add')}";
             submit.submit(url, data);
         }
-
     </script>
 </block>

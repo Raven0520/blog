@@ -9,8 +9,6 @@
 <script src="/Public/js/plugins/pace/pace.min.js"></script>
 <script src="/Public/js/sweetalert/dist/sweetalert.min.js"></script>
 <script src="/Public/js/common.js"></script>
-<h1>{$auth}
-</h1>
 <block name="footer-end"></block>
 
 <script>
@@ -28,6 +26,14 @@
             src = '/Public/head_img/default.png';
         }
         $('#nav_head_img').attr('src',src);
-    })
+    });
+
+    function profile(id) {
+        if (!id){
+            message.message({info:'请先登录',status:2});
+        }else {
+            window.location.href = "{:U('Profile/index')}" + '?id=' + id;
+        }
+    }
 
 </script>

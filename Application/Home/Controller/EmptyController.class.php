@@ -25,8 +25,11 @@ class EmptyController extends CommonController
     public function _initialize()
     {
         parent::_initialize();
+        $this->user = session('User');
+        $group = M('auth_group')->where(['id'=>$this->user['group_id']])->getField('rules');
+        $group = explode(',',$group);
         //获取菜单
-        $menu = $this->select('AuthRule',['sort_id'=>0,'status'=>1],'id,title,icon,name','list_order');
+        $menu = $this->select('AuthRule',['sort_id'=>0,'status'=>1,'menu_type'=>0,'id'=>['in',$group]],'id,title,icon,name','list_order');
         foreach ($menu as $k => $v){
             $second = $this->select('AuthRule',['sort_id'=>$v['id'],'status'=>1],'id,title,icon,name','list_order');
             $second_name = 'sec'.$v['id'];
@@ -38,7 +41,6 @@ class EmptyController extends CommonController
             $menu[$k]['second'] = $second_name;
             $this->assign($second_name,$second);
         }
-        $this->user = session('User');
         $this->user['id'] && $this->user['head_img'] = M('user')->where(['id'=>$this->user['id']])->getField('head_img');
         $this->checkAuth();
         '' != I('id') && $this->assign('id',I('id'));
@@ -56,7 +58,7 @@ class EmptyController extends CommonController
         $auth = new Auth();
         $action = ACTION_NAME;
         $controller = CONTROLLER_NAME;
-        if ($action == 'Status' || $action == 'ListOrder'){
+        if ($action == 'Status' || $action == 'ListOrder' || $action == 'edit_'){
             $action = 'edit';
         }
         if ($action == 'getData' || $action == 'getList' || $action == 'getRules'){
@@ -129,5 +131,10 @@ class EmptyController extends CommonController
      */
     public function edit($id = 0) {
         $this->ajaxReturn($this->info($id));
+    }
+
+    public function edit_($id, $field = true, $model = CONTROLLER_NAME, $where = array(), $name = null)
+    {
+        $this->ajaxReturn(parent::info($id, $field, $model, $where, $name));
     }
 }

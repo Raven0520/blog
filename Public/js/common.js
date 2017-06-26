@@ -80,8 +80,20 @@ var getInfo = {
 
 var check = {
 
-    Auth : function () {
-
+    Auth : function (id,data) {
+        var group_url = '/AuthGroup/Edit';
+        var rules_url = '/AuthRule/edit_';
+        $.post(group_url,{id:id},function (res) {
+            var rules = res.rules.split(',');
+            console.log(rules);
+            $.each(data,function (i,v) {
+                $.post(rules_url,{id:v,name:'name'},function (result) {
+                    if ($.inArray(result.id,rules) == -1){
+                        $('#'+i).hide();
+                    }
+                },"JSON");
+            });
+        },"JSON");
     }
 };
 
@@ -96,6 +108,8 @@ var message = {
             }, function () {
                 if (info.url) {
                     window.location.href = info.url;
+                }else {
+                    swal.close();
                 }
             })
         } else if (info.status == 2) {
@@ -107,6 +121,8 @@ var message = {
             }, function () {
                 if (info.url) {
                     window.location.href = info.url;
+                }else {
+                    swal.close();
                 }
             })
         } else if (info.status == 9) {
@@ -118,6 +134,8 @@ var message = {
             }, function () {
                 if (info.url) {
                     window.location.href = info.url;
+                }else {
+                    swal.close();
                 }
             })
         } else {

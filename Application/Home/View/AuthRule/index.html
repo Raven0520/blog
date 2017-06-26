@@ -96,6 +96,7 @@
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal">
+                        <input type="hidden" id="sort_id_temp">
                         <input type="hidden" id="id" name="id">
                         <div class="form-group">
                             <label class="col-sm-3 control-label">Previous</label>
@@ -201,7 +202,7 @@
             //加载菜单
             var html, type;
             $.each(menu, function (k, v) {
-                if (v.menu_type == 0) {
+                if (v.sort_id == 0) {
                     type = '{"type":"' + v.title + '"}';
                     html = "<li data-jstree='" + type + "')'><a href='#' onclick='info(" + v.id + ")'>" + v.title + "</a><ul id='sort_" + v.id + "'></ul></li>";
                     $("#site").append(html);
@@ -237,6 +238,7 @@
 
         //获取菜单信息
         function info(id) {
+            $('#sort_id_temp').val(id);
             var param = {};
             $.post("{:U('edit')}", {id : id}, function (info) {
                 $(".rule-box").removeClass('form-group');
@@ -244,19 +246,19 @@
                 fill.fill_by_id(param, info, 2);
 
                 //对模态框写入数据
-                param = {id : '', sort_id : '', menu_type : 'menu_type', title_ : 'title', icon_ : 'icon', name : '', list_order : ''};
+                param = {id : '',sort_id:'', menu_type : 'menu_type', title_ : 'title', icon_ : 'icon', name : '', list_order : ''};
                 fill.fill_by_id(param, info, 1);
                 $("#menu_icon").removeClass().addClass(info.icon);
                 $("#icon").removeClass().addClass(info.icon);
-
             }, "JSON");
         }
 
         function add() {
             //清除模态框中的数据
-            var param = ['id', 'sort_id', 'menu_type', 'title_', 'icon_', 'name', 'list_order'];
+            var param = ['id', 'menu_type', 'title_', 'icon_', 'name', 'list_order'];
             $('#icon').removeClass();
             clean.clean_by_id(param, 1);
+            $('#sort_id').val($('#sort_id_temp').val());
         }
 
         //填充数据
