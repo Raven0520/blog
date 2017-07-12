@@ -113,9 +113,10 @@ class EmptyController extends CommonController
             }
             $model = D(CONTROLLER_NAME);
             $model->startTrans();
-            if (false !== $model->update()) {
+            $id = $model->update();
+            if (false != $id) {
                 $model->commit();
-                $this->success('Success', $url);
+                $this->success('Success', $url ,$id);
             } else {
                 $model->rollback();
                 $this->error($model->getError());

@@ -1,0 +1,155 @@
+<extend name="Common/index"/>
+
+<block name="header">
+    <link href="/Public/css/plugins/summernote/summernote.css" rel="stylesheet">
+    <link href="/Public/css/plugins/summernote/summernote-bs3.css" rel="stylesheet">
+</block>
+
+<block name="action-area">
+    <div class="col-sm-8">
+        <div class="title-action">
+            <a data-toggle="modal" data-target="#add" class="btn btn-primary"><i class="fa fa-bold" style="font-size: 14px;">&nbsp;&nbsp;</i>Blog</a>
+        </div>
+    </div>
+</block>
+
+<block name="main_title">Blog</block>
+<block name="content">
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>
+                            Article
+                        </h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="form_editors.html#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li>
+                                    <a href="form_editors.html#">Config option 1</a>
+                                </li>
+                                <li>
+                                    <a href="form_editors.html#">Config option 2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+                        <h5>
+                            Abstract
+
+                            <button class="btn btn-primary btn-xs m-l-sm" onclick="edit('abstract')" type="button">Edit</button>
+                            <button class="btn btn-primary  btn-xs" onclick="save('abstract')" type="button">Save</button>
+                        </h5>
+                        <div class="ibox-content no-padding">
+                            <div class="click2edit wrapper p-md" id="abstract">
+
+
+                            </div>
+                        </div>
+
+                        <h5>
+                            Article
+
+                            <button class="btn btn-primary btn-xs m-l-sm" onclick="edit('article')" type="button">Edit</button>
+                            <button class="btn btn-primary  btn-xs" onclick="save('article')" type="button">Save</button>
+                        </h5>
+                        <div class="ibox-content no-padding">
+                            <div class="click2edit wrapper p-md" id="article">
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="add" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Add Blog</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <input type="hidden" id="id" name="id">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Title</label>
+                            <div class="col-sm-9">
+                                <input class="form-control m-b" name="title" id="title"/>
+                                <input type="hidden" id="article_id" name="article_id">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Author</label>
+                            <div class="col-sm-9">
+                                <input class="form-control m-b" id="author"/>
+                                <input type="hidden" name="user_id" value="{$User.id}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">List_Order</label>
+                            <div class="col-sm-9">
+                                <input class="form-control m-b" name="list_order" id="list_order"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="save_blog()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="footer-mid">
+    <script src="/Public/js/plugins/summernote/summernote.min.js"></script>
+</block>
+
+<block name="script">
+    <script>
+        $(document).ready(function () {
+        });
+
+        function edit(id) {
+            var blog_id = $('#id').val();
+            if (!blog_id){
+                return message.message({status:2,info:'Blog ID Can Not Be Null !'})
+            }else {
+                $('#'+id).summernote({focus : true});
+            }
+        }
+
+        function save(id) {
+            var article_id = $('#article_id').val();
+            var target = $('#'+id);
+            var html = target.code();
+            var data = {};
+            data['id'] = article_id;
+            data[id]   = html;
+            $.post("{:U('Article/Add')}",data,function (res) {
+
+            },"JSON");
+            target.destroy();
+        }
+        function save_blog() {
+
+        }
+    </script>
+</block>
