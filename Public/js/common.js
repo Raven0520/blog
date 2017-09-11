@@ -75,6 +75,16 @@ var getInfo = {
                 message.message({info : res.info, status : res.status});
             }
         }, "JSON");
+    },
+    
+    getSelect : function (url,where,id,value) {
+        var option;
+        $.post(url,where,function (res) {
+            $.each(res,function (i,v) {
+                option = '<option value="'+ v.id +'">' + v[value] + '</option>';
+                $('#'+id).append(option);
+            });
+        },"JSON")
     }
 };
 

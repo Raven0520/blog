@@ -19,34 +19,36 @@ class EmptyController extends CommonController
     protected $pages = array();
     protected $model = '';
     protected $order = '';
-    protected $user  = [];
-    protected $auth  = '';
+    protected $user = [];
+    protected $auth = '';
 
     public function _initialize()
     {
         parent::_initialize();
         $this->user = session('User');
-        $group = M('auth_group')->where(['id'=>$this->user['group_id']])->getField('rules');
-        $group = explode(',',$group);
+        $group = M('auth_group')->where(['id' => $this->user['group_id']])->getField('rules');
+        $group = explode(',', $group);
         //获取菜单
-        $menu = $this->select('AuthRule',['sort_id'=>0,'status'=>1,'menu_type'=>0,'id'=>['in',$group]],'id,title,icon,name','list_order');
-        foreach ($menu as $k => $v){
-            $second = $this->select('AuthRule',['sort_id'=>$v['id'],'status'=>1],'id,title,icon,name','list_order');
-            $second_name = 'sec'.$v['id'];
+        $where = ['sort_id' => 0, 'status' => 1, 'menu_type' => 0, 'id' => ['in', $group]];
+        $menu = $this->select('AuthRule', $where, 'id,title,icon,name', 'list_order');
+        foreach ($menu as $k => $v) {
+            $second = $this->select('AuthRule', ['sort_id' => $v['id'], 'status' => 1], 'id,title,icon,name', 'list_order');
+            $second_name = 'sec' . $v['id'];
 
-            foreach ($second as $val){
+            foreach ($second as $val) {
                 $val['title'] == CONTROLLER_NAME && $menu[$k]['class'] = 'active';
             }
             CONTROLLER_NAME == $v['title'] && $menu[$k]['class'] = 'active';
             $menu[$k]['second'] = $second_name;
-            $this->assign($second_name,$second);
+            $this->assign($second_name, $second);
         }
-        $this->user['id'] && $this->user['head_img'] = M('user')->where(['id'=>$this->user['id']])->getField('head_img');
+        $this->user['id'] && $this->user['head_img'] = M('user')->where(['id' => $this->user['id']])->getField('head_img');
         $this->checkAuth();
-        '' != I('id') && $this->assign('id',I('id'));
-        $this->assign('User',$this->user);
-        $this->assign('nav_menu',$menu);
-        '' != I('status') ? $this->where['status'] = I('status') : $this->where['status'] = ['neq',-1];
+        '' != I('id') && $this->assign('id', I('id'));
+        $this->assign('User', $this->user);
+        $this->assign('nav_menu', $menu);
+        '' != I('status') ? $this->where['status'] = I('status') : $this->where['status'] = ['neq', -1];
+        '' != I('where') && $this->where = I('where');
     }
 
     /**
@@ -58,23 +60,23 @@ class EmptyController extends CommonController
         $auth = new Auth();
         $action = ACTION_NAME;
         $controller = CONTROLLER_NAME;
-        if ($action == 'Status' || $action == 'ListOrder' || $action == 'edit_'){
+        if ($action == 'Status' || $action == 'ListOrder' || $action == 'edit_') {
             $action = 'edit';
         }
-        if ($action == 'getData' || $action == 'getList' || $action == 'getRules'){
+        if ($action == 'getData' || $action == 'getList' || $action == 'getRules') {
             $action = 'index';
         }
-        $this->auth = $auth->check('/'.$controller.'/'.$action,$this->user['id']);
+        $this->auth = $auth->check('/' . $controller . '/' . $action, $this->user['id']);
         'Index' == $controller && $action == 'index' && $this->auth = true;
-        'Blog'  == $controller && $action == 'index' && $this->auth = true;
+        'Blog' == $controller && $action == 'index' && $this->auth = true;
 //        1 == $this->user['id'] && $this->auth = true;
 
-        if ($this->auth == false){
-            if (empty($this->user)){
+        if ($this->auth == false) {
+            if (empty($this->user)) {
                 redirect('/login');
             }
-            $this->assign('auth_status',9);
-            IS_AJAX && $this->ajaxReturn(['status'=>9]);
+            $this->assign('auth_status', 9);
+            IS_AJAX && $this->ajaxReturn(['status' => 9]);
         }
     }
 
@@ -96,7 +98,8 @@ class EmptyController extends CommonController
     /**
      * 获取数据列表 ajax
      */
-    public function getData(){
+    public function getData()
+    {
         $this->ajaxReturn($this->select(CONTROLLER_NAME, $this->where));
     }
 
@@ -107,16 +110,17 @@ class EmptyController extends CommonController
     public function add()
     {
         if (IS_POST) {
-            $url = U('/'.CONTROLLER_NAME);
-            if (I('skipping_link')){
+            $url = U('/' . CONTROLLER_NAME);
+            if (I('skipping_link')) {
                 $url = I('skipping_link');
             }
             $model = D(CONTROLLER_NAME);
             $model->startTrans();
             $id = $model->update();
             if (false != $id) {
+                $info = 'Success';
                 $model->commit();
-                $this->success('Success', $url ,$id);
+                $this->success(['info' => $info, 'id' => $id], $url, $id);
             } else {
                 $model->rollback();
                 $this->error($model->getError());
@@ -128,14 +132,15 @@ class EmptyController extends CommonController
 
     /**
      * 编辑操作
-     * @param null $id
+     * @param int $id
      */
-    public function edit($id = 0) {
+    public function edit($id = 0)
+    {
         $this->ajaxReturn($this->info($id));
     }
 
-    public function edit_($id, $field = true, $model = CONTROLLER_NAME, $where = array(), $name = null)
-    {
-        $this->ajaxReturn(parent::info($id, $field, $model, $where, $name));
-    }
+//    public function edit_($id, $field = true, $model = CONTROLLER_NAME, $where = array(), $name = null)
+//    {
+//        $this->ajaxReturn(parent::info($id, $field, $model, $where, $name));
+//    }
 }

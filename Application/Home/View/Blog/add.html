@@ -3,12 +3,13 @@
 <block name="header">
     <link href="/Public/css/plugins/summernote/summernote.css" rel="stylesheet">
     <link href="/Public/css/plugins/summernote/summernote-bs3.css" rel="stylesheet">
+    <link href="/Public/css/plugins/bootstrap-markdown/bootstrap-markdown.min.css" rel="stylesheet">
 </block>
 
 <block name="action-area">
     <div class="col-sm-8">
         <div class="title-action">
-            <a data-toggle="modal" data-target="#add" class="btn btn-primary"><i class="fa fa-bold" style="font-size: 14px;">&nbsp;&nbsp;</i>Blog</a>
+            <a onclick="save_blog()" class="btn btn-primary"><i class="fa fa-bold" style="font-size: 14px;">&nbsp;&nbsp;</i>Save</a>
         </div>
     </div>
 </block>
@@ -27,9 +28,9 @@
                             <a class="collapse-link">
                                 <i class="fa fa-chevron-up"></i>
                             </a>
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="form_editors.html#">
-                                <i class="fa fa-wrench"></i>
-                            </a>
+                            <!--<a class="dropdown-toggle" data-toggle="dropdown" href="form_editors.html#">-->
+                            <!--<i class="fa fa-wrench"></i>-->
+                            <!--</a>-->
                             <ul class="dropdown-menu dropdown-user">
                                 <li>
                                     <a href="form_editors.html#">Config option 1</a>
@@ -42,32 +43,63 @@
                                 <i class="fa fa-times"></i>
                             </a>
                         </div>
+                        <div class="ibox-content" style="padding-bottom: 0px">
+                            <form class="form-horizontal">
+                                <input type="hidden" id="id" name="id">
+                                <input type="hidden" id="article_id" name="article_id">
+                                <input type="hidden" id="abstract" name="abstract">
+                                <div class="form-group">
+                                    <label class="pull-left control-label">Title</label>
+                                    <div class="col-sm-5">
+                                        <input class="form-control m-b" name="title" id="title"/>
+                                    </div>
 
-                        <div class="hr-line-dashed"></div>
-                        <h5>
-                            Abstract
+                                    <label class="m-l-lg pull-left control-label">Author</label>
+                                    <div class="col-sm-4">
+                                        <input class="form-control m-b" id="author"/>
+                                        <input type="hidden" name="user_id" value="{$User.id}">
+                                    </div>
 
-                            <button class="btn btn-primary btn-xs m-l-sm" onclick="edit('abstract')" type="button">Edit</button>
-                            <button class="btn btn-primary  btn-xs" onclick="save('abstract')" type="button">Save</button>
-                        </h5>
-                        <div class="ibox-content no-padding">
-                            <div class="click2edit wrapper p-md" id="abstract">
+                                    <label class="m-l-lg pull-left control-label">List_Order</label>
+                                    <div class="col-sm-1">
+                                        <input class="form-control m-b" name="list_order" id="list_order"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group" style="height: 49px">
+                                    <label class="pull-left control-label">Mark</label>
+                                    <div class="col-sm-5" id="mark_box">
+                                        <input type="hidden" name="mark" id="mark">
+                                    </div>
+
+                                    <label class="m-l-lg pull-left control-label">From</label>
+                                    <div class="col-sm-6" id="from_box">
+                                        <input type="hidden" name="from" id="from">
+                                    </div>
+                                </div>
 
 
-                            </div>
-                        </div>
+                                <div class="hr-line-dashed"></div>
+                                <h5>
+                                    Abstract
 
-                        <h5>
-                            Article
-
-                            <button class="btn btn-primary btn-xs m-l-sm" onclick="edit('article')" type="button">Edit</button>
-                            <button class="btn btn-primary  btn-xs" onclick="save('article')" type="button">Save</button>
-                        </h5>
-                        <div class="ibox-content no-padding">
-                            <div class="click2edit wrapper p-md" id="article">
+                                    <button class="btn btn-primary btn-xs m-l-sm" onclick="edit()" type="button">Edit</button>
+                                    <button class="btn btn-primary  btn-xs" onclick="done()" type="button">Done</button>
+                                </h5>
+                                <div class="ibox-content no-padding">
+                                    <div class="click2edit wrapper p-md" id="abstract_">
 
 
-                            </div>
+                                    </div>
+                                </div>
+                                <h5>Article</h5>
+                                <div class="ibox-content no-padding" style="border-style: none ">
+
+                                    <textarea name="article" data-provide="markdown" rows="10"></textarea>
+
+                                </div>
+
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -83,31 +115,7 @@
                     <h4 class="modal-title">Add Blog</h4>
                 </div>
                 <div class="modal-body">
-                    <form class="form-horizontal">
-                        <input type="hidden" id="id" name="id">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Title</label>
-                            <div class="col-sm-9">
-                                <input class="form-control m-b" name="title" id="title"/>
-                                <input type="hidden" id="article_id" name="article_id">
-                            </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">Author</label>
-                            <div class="col-sm-9">
-                                <input class="form-control m-b" id="author"/>
-                                <input type="hidden" name="user_id" value="{$User.id}">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">List_Order</label>
-                            <div class="col-sm-9">
-                                <input class="form-control m-b" name="list_order" id="list_order"/>
-                            </div>
-                        </div>
-                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
@@ -120,36 +128,91 @@
 
 <block name="footer-mid">
     <script src="/Public/js/plugins/summernote/summernote.min.js"></script>
+    <script src="/Public/js/plugins/bootstrap-markdown/bootstrap-markdown.js"></script>
+    <script src="/Public/js/plugins/bootstrap-markdown/markdown.js"></script>
 </block>
 
 <block name="script">
     <script>
         $(document).ready(function () {
+            from();
+            mark();
         });
 
-        function edit(id) {
-            var blog_id = $('#id').val();
-            if (!blog_id){
-                return message.message({status:2,info:'Blog ID Can Not Be Null !'})
-            }else {
-                $('#'+id).summernote({focus : true});
-            }
+        function edit() {
+            $('#abstract_').summernote({focus : true});
         }
 
-        function save(id) {
-            var article_id = $('#article_id').val();
-            var target = $('#'+id);
-            var html = target.code();
-            var data = {};
-            data['id'] = article_id;
-            data[id]   = html;
-            $.post("{:U('Article/Add')}",data,function (res) {
+        function mark() {
+            var mark, tag_id;
+            var tag = 'mark';
+            $.post("{:U('Config/getData')}", {where : {name : 'mark', status : 1}}, function (res) {
+                $.each(res, function (i, v) {
+                    tag_id = tag + '_' + v.id;
+                    mark = '<button class="btn btn-sm m-r-sm btn-outline btn-primary" status="0" type="button" id="' + tag_id + '" onclick="chooseTag(\'' + v.id + '\', \'' + tag + '\')">' + v.value + '</button>';
+                    $('#mark_box').append(mark);
+                });
+            }, "JSON")
+        }
 
-            },"JSON");
+        function from() {
+            var from, tag_id;
+            var tag = 'from';
+            $.post("{:U('Config/getData')}", {where : {name : 'from', status : 1}}, function (res) {
+                $.each(res, function (i, v) {
+                    tag_id = tag + '_' + v.id;
+                    from = '<button class="btn btn-sm m-r-sm btn-outline btn-primary" status="0" type="button" id="' + tag_id + '" onclick="chooseTag(\'' + v.id + '\',\'' + tag + '\')">' + v.value + '</button>';
+                    $('#from_box').append(from);
+                });
+            }, "JSON")
+        }
+
+        function chooseTag(id, tag) {
+            var obj = $('#' + tag + '_' + id);
+            var box = $('#' + tag);
+            var data = box.val();
+
+            if (obj.attr('status') === '0') {
+                obj.attr('status', '1');
+                obj.attr('class', 'btn btn-sm m-r-sm btn-primary');
+                if (data) {
+                    data = data + ',' + id;
+                }else {
+                    data = id;
+                }
+            } else {
+                obj.attr('status', '0');
+                obj.attr('class', 'btn btn-sm m-r-sm btn-outline btn-primary');
+                var data_ = data.split(',');
+                $.each(data_, function (i, v) {
+                    if (v === id) {
+                        data_.splice(i, 1);
+                    }
+                });
+                data = data_.join(',');
+            }
+
+            box.val(data);
+            console.log(data);
+        }
+
+        function done() {
+            var target = $('#abstract_');
+            var html = target.code();
+            $('#abstract').val(html);
             target.destroy();
         }
         function save_blog() {
-
+            var id = $('#id').val();
+            var data = $('form').serialize();
+            console.log(data);
+            return;
+            $.post("{:U('Blog/add')}", data, function (res) {
+                if (!id) {
+                    id = res.info.id;
+                }
+                $('#id').val(id);
+            }, "JSON");
         }
     </script>
 </block>

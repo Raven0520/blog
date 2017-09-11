@@ -1,0 +1,109 @@
+<extend name="Common/index" />
+
+
+<block name="content">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>From</h5>
+                        <div class="ibox-tools">
+                            <a class="add-link" data-toggle="modal" data-target="#add" onclick="openModal('From')">
+                                <i class="fa fa-plus"></i>
+                            </a>
+
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content" style="line-height: 3.2" id="from">
+                        <foreach name="data" item="v">
+                            <if condition="$v['name'] eq 'From'">
+                                <button type="button" class="btn btn-default m-r">{$v.value}</button>
+                            </if>
+                        </foreach>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Mark</h5>
+                        <div class="ibox-tools">
+                            <a class="add-link" data-toggle="modal" data-target="#add" onclick="openModal('Mark')">
+                                <i class="fa fa-plus"></i>
+                            </a>
+
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content" style="line-height: 3.2" id="mark">
+                        <foreach name="data" item="v">
+                            <if condition="$v['name'] eq 'Mark'">
+                                <button type="button" class="btn btn-default m-r">{$v.value}</button>
+                            </if>
+                        </foreach>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal inmodal" id="add" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="title"></h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="submitForm">
+                        <input type="hidden" id="id" name="id">
+                        <input type="hidden" id="name" name="name">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Value</label>
+                            <div class="col-sm-8">
+                                <input class="form-control m-b" name="value" id="value" autofocus/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="Save()">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script>
+        function openModal(title) {
+            $('#title').html('Add '+title);
+            $('#name').val(title);
+        }
+        
+        function Save() {
+            var url = "{:U('Add')}";
+            var value = $('#value').val();
+            if (!value){
+                return message.message({status:2,info:'Invalid value ！'});
+            }
+
+            submit.submit(url);
+        }
+    </script>
+</block>

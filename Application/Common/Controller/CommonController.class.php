@@ -2,6 +2,7 @@
 
 namespace Common\Controller;
 
+use Think\Cache\Driver\Redis;
 use Think\Controller;
 
 /**
@@ -21,12 +22,13 @@ class CommonController extends Controller
     protected $where = array();
     protected $field = true;
     protected $order = '';
+    protected $redis = '';
 
     protected $res = array('status' => 1, 'info' => '操作成功');
 
     public function _initialize()
     {
-
+        $this->redis = new Redis();
     }
 
     /**

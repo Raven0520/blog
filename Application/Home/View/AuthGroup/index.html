@@ -21,7 +21,7 @@
                         </foreach>
 
                         <a class="add-link" data-toggle="modal" data-target="#add">
-                            <i class="fa fa-edit"></i>
+                            <i class="fa fa-plus"></i>
                         </a>
 
                         <a class="collapse-link">
@@ -178,7 +178,7 @@
                 return swal('Title can not be Empty !','','error');
             }
             var data = {id:id,title:title,rules:$('#rules').val()};
-            var url  = "{:U(add)}";
+            var url  = "{:U(Add)}";
             submit.submit(url,data);
         }
     </script>
